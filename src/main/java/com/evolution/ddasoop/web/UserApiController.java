@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserApiController {
     private final UserService userService;
     @GetMapping("/api/users/{userIdx}/main")
-    public UserMainResponseDto getMain(@PathVariable Long userIdx){
-        return userService.getMain(userIdx);
+    public UserMainResponseDto getMainInfo(@PathVariable Long userIdx){
+        return userService.getMainInfo(userIdx);
     }
 }

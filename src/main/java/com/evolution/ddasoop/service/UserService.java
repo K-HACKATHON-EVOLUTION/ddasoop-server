@@ -12,7 +12,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public UserMainResponseDto getMain(Long userIdx){
-        return new UserMainResponseDto();
+    public UserMainResponseDto getMainInfo(Long userIdx){
+        return new UserMainResponseDto(userRepository.findUserByUserIdx(userIdx));
     }
 }
