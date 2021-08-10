@@ -32,7 +32,7 @@ public class User {
     private Double totalCarbon;
 
     @ManyToOne(targetEntity = Forest.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "forest")
+    @JoinColumn(name = "forestIdx")
     private Forest forest;
 
     @Builder
