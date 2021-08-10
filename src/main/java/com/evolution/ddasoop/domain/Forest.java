@@ -1,19 +1,31 @@
 package com.evolution.ddasoop.domain;
 
-public class Forest {
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
+
+@Getter
+@NoArgsConstructor
+@Entity
+@Table(name="forest")
+public class Forest {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer groupIdx;
 
+    @Column
     private String groupName;
 
-    // user 테이블 user_idx
+    @Column
     private Integer leader;
 
-    // 멤버 수
+    @Column
     private Integer size;
 
+    @Column
     private String groupImg;
 
-    // 그룹 삭제
+    @Column
     private Boolean deleteFlag;
 }
