@@ -15,17 +15,17 @@ public class Tree {
     private Long treeIdx;
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user")
+    @JoinColumn(name = "userIdx")
     private User user;
 
     @Column
-    private Integer treeAmount;
+    private Double treeCarbon;
 
     @Column
     private Integer growth;
 
     @OneToOne
-    @JoinColumn(name = "imageIdx")
+    @JoinColumn(name = "treeImg")
     private Image treeImg;
 
 }
