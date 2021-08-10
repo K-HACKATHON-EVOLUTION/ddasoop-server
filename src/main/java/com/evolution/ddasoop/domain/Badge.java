@@ -1,12 +1,29 @@
 package com.evolution.ddasoop.domain;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+
+@Getter
+@NoArgsConstructor
+@Entity
+@Table(name="Badge")
 public class Badge {
 
-    private Long userIdx;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long badgeIdx;
 
-    private Integer badgeIdx;
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user")
+    private User user;
 
-    private String badgeImg;
+    @OneToOne
+    @JoinColumn(name = "imageIdx")
+    private Image badgeImg;
 
+    @ManyToOne(targetEntity = Tree.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "tree")
     private Integer treeIdx;
 }
