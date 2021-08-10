@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
@@ -16,17 +17,17 @@ public class Log{
     private Integer logIdx;
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user")
+    @JoinColumn(name = "userIdx")
     private User user;
 
     @Column
     private Double distance;
 
     @Column
-    private Timestamp startTime;
+    private LocalDateTime startTime;
 
     @Column
-    private Timestamp endTime;
+    private LocalDateTime endTime;
 
     @Column
     private Double carbon;
