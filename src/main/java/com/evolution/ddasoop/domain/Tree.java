@@ -24,7 +24,8 @@ public class Tree {
     @Column
     private Integer growth;
 
-    @Column
-    private String treeImg;
+    @OneToOne
+    @JoinColumn(name = "imageIdx")
+    private Image treeImg;
 
 }
