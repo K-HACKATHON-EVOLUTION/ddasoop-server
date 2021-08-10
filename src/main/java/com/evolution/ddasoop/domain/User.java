@@ -1,5 +1,6 @@
 package com.evolution.ddasoop.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +14,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer userIdx;
+    private Long userIdx;
 
     @Column
     private String userName;
@@ -28,10 +29,19 @@ public class User {
     private Boolean deleteFlag;
 
     @Column
-    private Integer totalCarbon;
+    private Double totalCarbon;
 
     @ManyToOne(targetEntity = Forest.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "forest")
-    private Integer groupIdx;
+    private Forest forest;
 
+    @Builder
+    public User(String userName, String userEmail, String userPassword, Boolean deleteFlag, Double totalCarbon, Forest forest){
+        this.userName = userName;
+        this.userEmail = userEmail;
+        this.userPassword = userPassword;
+        this.deleteFlag = deleteFlag;
+        this.totalCarbon = totalCarbon;
+        this.forest = forest;
+    }
 }

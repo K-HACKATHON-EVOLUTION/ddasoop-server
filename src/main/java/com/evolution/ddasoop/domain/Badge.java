@@ -2,7 +2,7 @@ package com.evolution.ddasoop.domain;
 
 public class Badge {
 
-    private Integer userIdx;
+    private Long userIdx;
 
     private Integer badgeIdx;
 

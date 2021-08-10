@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class Forest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer groupIdx;
+    private Long groupIdx;
 
     @Column
     private String groupName;

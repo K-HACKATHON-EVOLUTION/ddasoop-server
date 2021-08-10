@@ -3,7 +3,7 @@ package com.evolution.ddasoop.domain;
 import java.sql.Timestamp;
 
 public class Heart {
-    private Integer likeIdx;
+    private Long likeIdx;
 
     private Timestamp date;
 
