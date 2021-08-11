@@ -8,4 +8,5 @@ import java.util.List;
 @Repository
 public interface LogRepository extends JpaRepository<Log, Long> {
     List<Log> findAllByUserUserIdxOrderByEndTimeDesc(Long userIdx);
+    Log findLogByUserUserIdxAndLogIdx(Long userIdx, Long logIdx);
 }

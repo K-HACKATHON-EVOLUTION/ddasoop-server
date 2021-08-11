@@ -4,6 +4,7 @@ import com.evolution.ddasoop.domain.Log;
 import com.evolution.ddasoop.domain.LogRepository;
 import com.evolution.ddasoop.web.dto.LogListResponseDto;
 import com.evolution.ddasoop.web.dto.LogMonthResponseDto;
+import com.evolution.ddasoop.web.dto.LogResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,5 +60,10 @@ public class LogService {
                     .build());
         }
         return logs;
+    }
+
+    @Transactional(readOnly = true)
+    public LogResponseDto getLog(Long userIdx, Long logIdx){
+        return new LogResponseDto(logRepository.findLogByUserUserIdxAndLogIdx(userIdx, logIdx));
     }
 }
