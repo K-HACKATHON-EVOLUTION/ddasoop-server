@@ -48,14 +48,14 @@ public class LogService {
             Duration d = Duration.between(log.getStartTime(),log.getEndTime());
             Long hours = d.toHours();
             Long minutes = d.minusHours(hours).toMinutes();
-            Double carbon = log.getCarbon();
 
             logs.add(LogListResponseDto.builder()
+                    .logIdx(log.getLogIdx())
                     .logDate(logDate)
                     .dayOfWeek(dayOfWeek)
                     .hours(hours)
                     .minutes(minutes)
-                    .carbon(carbon)
+                    .carbon(log.getCarbon())
                     .build());
         }
         return logs;
