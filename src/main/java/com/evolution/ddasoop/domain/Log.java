@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class Log{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer logIdx;
+    private Long logIdx;
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "userIdx")

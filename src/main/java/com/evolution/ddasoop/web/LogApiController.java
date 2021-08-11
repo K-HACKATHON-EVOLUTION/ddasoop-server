@@ -3,6 +3,7 @@ package com.evolution.ddasoop.web;
 import com.evolution.ddasoop.service.LogService;
 import com.evolution.ddasoop.web.dto.LogListResponseDto;
 import com.evolution.ddasoop.web.dto.LogMonthResponseDto;
+import com.evolution.ddasoop.web.dto.LogResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,5 +24,10 @@ public class LogApiController {
     @GetMapping("/api/users/{userIdx}/logs")
     public List<LogListResponseDto> getLogs(@PathVariable Long userIdx){
         return logService.getLogs(userIdx);
+    }
+
+    @GetMapping("/api/users/{userIdx}/logs/{logIdx}")
+    public LogResponseDto getLog(@PathVariable Long userIdx, @PathVariable Long logIdx){
+        return logService.getLog(userIdx,logIdx);
     }
 }

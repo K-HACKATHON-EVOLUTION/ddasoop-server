@@ -8,6 +8,7 @@ import java.time.LocalDate;
 @Getter
 @Builder
 public class LogListResponseDto {
+    private Long logIdx;
     private LocalDate logDate;
     private Integer dayOfWeek;
     private Long hours;
