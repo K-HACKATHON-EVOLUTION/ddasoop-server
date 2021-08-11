@@ -1,5 +1,6 @@
 package com.evolution.ddasoop.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,7 +17,7 @@ public class Badge {
     private Long badgeIdx;
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user")
+    @JoinColumn(name = "userIdx")
     private User user;
 
     @OneToOne
@@ -24,6 +25,13 @@ public class Badge {
     private Image badgeImg;
 
     @ManyToOne(targetEntity = Tree.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "tree")
-    private Integer treeIdx;
+    @JoinColumn(name = "treeIdx")
+    private Tree tree;
+
+    @Builder
+    public Badge(User user, Image badgeImg, Tree tree){
+        this.user = user;
+        this.badgeImg = badgeImg;
+        this.tree = tree;
+    }
 }

@@ -1,5 +1,6 @@
 package com.evolution.ddasoop.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -37,4 +38,15 @@ public class Log{
 
     @Column
     private String endLocation;
+
+    @Builder
+    public Log(User user, Double distance, LocalDateTime startTime, LocalDateTime endTime, Double carbon, String startLocation, String endLocation){
+        this.user = user;
+        this.distance = distance;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.carbon = carbon;
+        this.startLocation = startLocation;
+        this.endLocation = endLocation;
+    }
 }

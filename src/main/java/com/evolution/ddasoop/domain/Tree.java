@@ -1,5 +1,6 @@
 package com.evolution.ddasoop.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,4 +29,11 @@ public class Tree {
     @JoinColumn(name = "treeImg")
     private Image treeImg;
 
+    @Builder
+    public Tree(User user, Double treeCarbon, Integer growth, Image treeImg){
+        this.user = user;
+        this.treeCarbon = treeCarbon;
+        this.growth = growth;
+        this.treeImg = treeImg;
+    }
 }
