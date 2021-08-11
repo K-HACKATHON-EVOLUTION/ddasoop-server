@@ -2,11 +2,13 @@ package com.evolution.ddasoop.service;
 
 import com.evolution.ddasoop.domain.Log;
 import com.evolution.ddasoop.domain.LogRepository;
+import com.evolution.ddasoop.web.dto.LogListResponseDto;
 import com.evolution.ddasoop.web.dto.LogMonthResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,5 +37,27 @@ public class LogService {
                 .treeAmount(treeAmount)
                 .logDates(logDates)
                 .build();
+    }
+
+    @Transactional(readOnly = true)
+    public List<LogListResponseDto> getLogs(Long userIdx){
+        List<LogListResponseDto> logs = new ArrayList<>();
+        for(Log log : logRepository.findAllByUserUserIdx(userIdx)){
+            LocalDate logDate = log.getStartTime().toLocalDate();
+            Integer dayOfWeek = logDate.getDayOfWeek().getValue();
+            Duration d = Duration.between(log.getStartTime(),log.getEndTime());
+            Long hours = d.toHours();
+            Long minutes = d.minusHours(hours).toMinutes();
+            Double carbon = log.getCarbon();
+
+            logs.add(LogListResponseDto.builder()
+                    .logDate(logDate)
+                    .dayOfWeek(dayOfWeek)
+                    .hours(hours)
+                    .minutes(minutes)
+                    .carbon(carbon)
+                    .build());
+        }
+        return logs;
     }
 }
