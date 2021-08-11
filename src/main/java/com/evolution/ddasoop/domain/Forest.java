@@ -12,10 +12,10 @@ import javax.persistence.*;
 public class Forest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long groupIdx;
+    private Long forestIdx;
 
     @Column
-    private String groupName;
+    private String forestName;
 
     @Column
     private Integer leader;
@@ -24,7 +24,7 @@ public class Forest {
     private Integer size;
 
     @Column
-    private String groupImg;
+    private String forestImg;
 
     @Column
     private Boolean deleteFlag;
