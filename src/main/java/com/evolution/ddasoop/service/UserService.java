@@ -21,5 +21,9 @@ public class UserService {
                 .forestName(forest.getForestName())
                 .build();
         return myForestDto;
+        
+    @Transactional(readOnly = true)
+    public UserMainResponseDto getMain(Long userIdx){
+        return new UserMainResponseDto();
     }
 }

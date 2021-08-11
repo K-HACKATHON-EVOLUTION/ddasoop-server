@@ -1,22 +1,39 @@
 package com.evolution.ddasoop.domain;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 import java.sql.Timestamp;
 
-public class Log {
-    private Long userIdx;
+@Getter
+@NoArgsConstructor
+@Entity
+@Table(name="log")
+public class Log{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer logIdx;
 
-    private Integer courseIdx;
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user")
+    private User user;
 
-    private String courseName;
+    @Column
+    private Double distance;
 
-    // 코스 수식어?
-    private String courseIntro;
+    @Column
+    private Timestamp startTime;
 
-    private String theme;
+    @Column
+    private Timestamp endTime;
 
-    private Timestamp courseDate;
+    @Column
+    private Double carbon;
 
-    private Boolean deleteFlag;
+    @Column
+    private String startLocation;
 
-    private Integer distance;
+    @Column
+    private String endLocation;
 }
