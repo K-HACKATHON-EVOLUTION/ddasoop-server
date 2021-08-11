@@ -21,7 +21,7 @@ public class LogService {
 
     @Transactional(readOnly = true)
     public LogMonthResponseDto getMonthlyLog(Long userIdx){
-        List<Log> logs = logRepository.findAllByUserUserIdx(userIdx);
+        List<Log> logs = logRepository.findAllByUserUserIdxOrderByEndTimeDesc(userIdx);
         Double treeAmount = 0.0;
         List<LocalDate> logDates = new ArrayList<>();
 
@@ -42,7 +42,7 @@ public class LogService {
     @Transactional(readOnly = true)
     public List<LogListResponseDto> getLogs(Long userIdx){
         List<LogListResponseDto> logs = new ArrayList<>();
-        for(Log log : logRepository.findAllByUserUserIdx(userIdx)){
+        for(Log log : logRepository.findAllByUserUserIdxOrderByEndTimeDesc(userIdx)){
             LocalDate logDate = log.getStartTime().toLocalDate();
             Integer dayOfWeek = logDate.getDayOfWeek().getValue();
             Duration d = Duration.between(log.getStartTime(),log.getEndTime());
