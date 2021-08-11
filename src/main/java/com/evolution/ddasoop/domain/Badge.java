@@ -21,7 +21,7 @@ public class Badge {
     private User user;
 
     @OneToOne
-    @JoinColumn(name = "imageIdx")
+    @JoinColumn(name = "badgeImg")
     private Image badgeImg;
 
     @ManyToOne(targetEntity = Tree.class, fetch = FetchType.LAZY)
