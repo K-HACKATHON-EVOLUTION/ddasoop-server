@@ -28,4 +28,15 @@ public class Forest {
 
     @Column
     private Boolean deleteFlag;
+
+    @Column
+    private String forestIntro;
+
+    public void updateName(String forest_name){
+        this.forestName = forest_name;
+    }
+
+    public void updateIntro(String forest_intro){
+        this.forestIntro = forest_intro;
+    }
 }

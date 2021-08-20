@@ -28,4 +28,11 @@ public class UserService {
                 .build();
         return myForestDto;
     }
+
+    //삭제?
+    @Transactional
+    public void deleteMember(long user_idx , long forest_idx){
+        userRepository.findById(user_idx);
+
+    }
 }
