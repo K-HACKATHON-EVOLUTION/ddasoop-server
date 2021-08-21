@@ -2,6 +2,8 @@ package com.evolution.ddasoop.service;
 
 import com.evolution.ddasoop.domain.Badge;
 import com.evolution.ddasoop.domain.BadgeRepository;
+import com.evolution.ddasoop.domain.User;
+import com.evolution.ddasoop.domain.UserRepository;
 import com.evolution.ddasoop.web.dto.BadgeListResponseDto;
 import com.evolution.ddasoop.web.dto.BadgeResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -17,11 +19,16 @@ import java.util.NoSuchElementException;
 @Service
 public class BadgeService {
     private final BadgeRepository badgeRepository;
+    private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public List<BadgeListResponseDto> getBadges(Long userIdx){
+    public List<BadgeListResponseDto> getBadges(Long userIdx) throws IllegalArgumentException{
+        User user = userRepository.findByUserIdxAndDeleteFlagFalse(userIdx);
+
+        if(user == null) throw new IllegalArgumentException();
+
         List<BadgeListResponseDto> badges = new ArrayList<>();
-        for(Badge badge: badgeRepository.findAllByUserUserIdx(userIdx)){
+        for(Badge badge: badgeRepository.findAllByUserUserIdx(user.getUserIdx())){
             badges.add(new BadgeListResponseDto(badge));
         }
         return badges;

@@ -1,9 +1,6 @@
 package com.evolution.ddasoop.service;
 
-import com.evolution.ddasoop.domain.Image;
-import com.evolution.ddasoop.domain.ImageRepository;
-import com.evolution.ddasoop.domain.Tree;
-import com.evolution.ddasoop.domain.TreeRepository;
+import com.evolution.ddasoop.domain.*;
 import com.evolution.ddasoop.web.dto.TreeResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

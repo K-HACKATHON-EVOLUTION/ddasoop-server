@@ -16,13 +16,22 @@ public class UserService {
 
 
     @Transactional(readOnly = true)
-    public UserMainResponseDto getMainInfo(Long userIdx){
-        return new UserMainResponseDto(userRepository.findUserByUserIdx(userIdx));
+    public UserMainResponseDto getMainInfo(Long userIdx) throws IllegalArgumentException{
+        User user = userRepository.findByUserIdxAndDeleteFlagFalse(userIdx);
+        if(user == null){
+            throw new IllegalArgumentException();
+        }
+
+        return new UserMainResponseDto(user);
     }
 
     @Transactional(readOnly = true)
-    public UserResponseDto getUser(Long userIdx){
-        User user = userRepository.findUserByUserIdx(userIdx);
+    public UserResponseDto getUser(Long userIdx) throws IllegalArgumentException{
+        User user = userRepository.findByUserIdxAndDeleteFlagFalse(userIdx);
+        if(user == null){
+            throw new IllegalArgumentException();
+        }
+
         Image treeImg = treeRepository.findByUserUserIdxAndTreeCarbonLessThan(userIdx, TreeAmountStandard).getTreeImg();
 
         return UserResponseDto.builder()

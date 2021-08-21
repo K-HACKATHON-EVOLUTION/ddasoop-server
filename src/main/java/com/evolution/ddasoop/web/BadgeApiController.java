@@ -19,8 +19,13 @@ public class BadgeApiController {
     private final BadgeService badgeService;
 
     @GetMapping("/api/users/{userIdx}/badges")
-    public List<BadgeListResponseDto> getBadges(@PathVariable Long userIdx){
-        return badgeService.getBadges(userIdx);
+    public ResponseEntity<List<BadgeListResponseDto>> getBadges(@PathVariable Long userIdx){
+        try{
+            return new ResponseEntity<>(badgeService.getBadges(userIdx), HttpStatus.OK);
+        }catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/api/badges/{badgeIdx}")
