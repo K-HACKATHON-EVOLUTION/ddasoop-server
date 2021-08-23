@@ -3,11 +3,12 @@ package com.evolution.ddasoop.web;
 import com.evolution.ddasoop.service.LogService;
 import com.evolution.ddasoop.web.dto.LogListResponseDto;
 import com.evolution.ddasoop.web.dto.LogMonthResponseDto;
+import com.evolution.ddasoop.web.dto.LogRequestDto;
 import com.evolution.ddasoop.web.dto.LogResponseDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,6 +20,16 @@ public class LogApiController {
     @GetMapping("/api/users/{userIdx}/logs/monthly")
     public LogMonthResponseDto getMonthlyLog(@PathVariable Long userIdx){
         return logService.getMonthlyLog(userIdx);
+    }
+
+    @PostMapping("/api/users/{userIdx}/logs")
+    public ResponseEntity<Long> saveLog(@PathVariable Long userIdx, @RequestBody LogRequestDto requestDto){
+        try{
+            return new ResponseEntity<>(logService.saveLog(userIdx, requestDto), HttpStatus.OK);
+        }catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/api/users/{userIdx}/logs")
