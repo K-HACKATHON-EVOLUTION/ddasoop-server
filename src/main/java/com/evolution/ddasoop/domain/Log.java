@@ -39,6 +39,8 @@ public class Log{
     @Column
     private String endLocation;
 
+    private static final Double CARBON_CALCULATION = 0.232;
+
     @Builder
     public Log(User user, Double distance, LocalDateTime startTime, LocalDateTime endTime, Double carbon, String startLocation, String endLocation){
         this.user = user;
@@ -48,5 +50,10 @@ public class Log{
         this.carbon = carbon;
         this.startLocation = startLocation;
         this.endLocation = endLocation;
+    }
+
+    public Double calculateCarbon(Double increased){
+        carbon = (increased * CARBON_CALCULATION);
+        return carbon;
     }
 }

@@ -17,7 +17,7 @@ public class TreeResponseDto {
 
     public TreeResponseDto(Tree entity){
         this.treeIdx = entity.getTreeIdx();
-        this.userIdx = entity.getTreeIdx();
+        this.userIdx = entity.getUser().getUserIdx();
         this.treeCarbon = entity.getTreeCarbon();
         this.growth = entity.getGrowth();
         this.treeImg = entity.getTreeImg().getFilePath()+entity.getTreeImg().getOriginalFileName();

@@ -44,4 +44,8 @@ public class User {
         this.totalCarbon = totalCarbon;
         this.forest = forest;
     }
+
+    public void updateTotalCarbon(Double carbon){
+        totalCarbon += carbon;
+    }
 }
