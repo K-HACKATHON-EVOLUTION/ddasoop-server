@@ -56,4 +56,8 @@ public class User {
     public void updateForest(Forest forest){
         this.forest = forest;
     }
+
+    public void deleteForest(){
+        this.forest = null;
+    }
 }

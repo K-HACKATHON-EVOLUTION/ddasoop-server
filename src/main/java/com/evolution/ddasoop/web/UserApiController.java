@@ -54,4 +54,14 @@ public class UserApiController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail");
         }
     }
+
+    @PatchMapping("/{userIdx}/forest")
+    public ResponseEntity<Object> deleteForest(@PathVariable Long userIdx){
+        try{
+            return ResponseEntity.ok().body(userService.deleteForest(userIdx));
+        }catch(Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail");
+        }
+    }
 }

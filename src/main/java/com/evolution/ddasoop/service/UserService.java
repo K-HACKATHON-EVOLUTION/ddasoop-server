@@ -66,4 +66,14 @@ public class UserService {
         user.updateForest(forest);
         return "success";
     }
+
+    @Transactional
+    public String deleteForest(Long userIdx) throws IllegalArgumentException{
+        User user = userRepository.findByUserIdxAndDeleteFlagFalse(userIdx);
+        if(user == null){
+            throw new IllegalArgumentException();
+        }
+        user.deleteForest();
+        return "success";
+    }
 }
