@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     private final UserRepository userRepository;
     private final TreeRepository treeRepository;
+    private final ForestRepository forestRepository;
     private final double TreeAmountStandard = 10.0;
 
 
@@ -51,6 +52,18 @@ public class UserService {
         }
 
         user.updateUserName(userName);
+        return "success";
+    }
+
+    @Transactional
+    public String addForest(Long userIdx, Long forestIdx) throws IllegalArgumentException{
+        User user = userRepository.findByUserIdxAndDeleteFlagFalse(userIdx);
+        Forest forest = forestRepository.findByForestIdxAndDeleteFlagFalse(forestIdx);
+        if(user == null || forest == null){
+            throw new IllegalArgumentException();
+        }
+
+        user.updateForest(forest);
         return "success";
     }
 }

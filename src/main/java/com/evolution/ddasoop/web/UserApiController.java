@@ -11,10 +11,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/api/users")
 public class UserApiController {
     private final UserService userService;
 
-    @GetMapping("/api/users/{userIdx}/main")
+    @GetMapping("/{userIdx}/main")
     public ResponseEntity<UserMainResponseDto> getMainInfo(@PathVariable Long userIdx){
         try{
             return new ResponseEntity<>(userService.getMainInfo(userIdx),HttpStatus.OK);
@@ -24,20 +25,30 @@ public class UserApiController {
         }
     }
 
-    @GetMapping("/api/users/{userIdx}")
+    @GetMapping("/{userIdx}")
     public ResponseEntity<Object> getUser(@PathVariable Long userIdx){
         try{
             return ResponseEntity.ok().body(userService.getUser(userIdx));
         }catch(Exception e){
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail");
         }
     }
 
-    @PatchMapping("/api/users/{userIdx}/userName")
+    @PatchMapping("/{userIdx}/userName")
     public ResponseEntity<Object> updateUserName(@PathVariable Long userIdx, @RequestBody UserUpdateRequestDto requestDto){
         try{
             return ResponseEntity.ok().body(userService.updateUserName(userIdx, requestDto));
+        }catch(Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail");
+        }
+    }
+
+    @PatchMapping("/{userIdx}/forest/{forestIdx}")
+    public ResponseEntity<Object> addForest(@PathVariable Long userIdx, @PathVariable Long forestIdx){
+        try{
+            return ResponseEntity.ok().body(userService.addForest(userIdx, forestIdx));
         }catch(Exception e){
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail");
