@@ -44,6 +44,16 @@ public class UserService {
     }
 
     @Transactional
+    public String deleteUser(Long userIdx) throws IllegalArgumentException{
+        User user = userRepository.findByUserIdxAndDeleteFlagFalse(userIdx);
+        if(user == null){
+            throw new IllegalArgumentException();
+        }
+        user.updateDeleteFlag();
+        return "success";
+    }
+
+    @Transactional
     public String updateUserName(Long userIdx, UserUpdateRequestDto requestDto) throws IllegalArgumentException{
         User user = userRepository.findByUserIdxAndDeleteFlagFalse(userIdx);
         String userName = requestDto.getUserName();

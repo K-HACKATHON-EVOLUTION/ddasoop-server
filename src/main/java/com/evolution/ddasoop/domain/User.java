@@ -60,4 +60,8 @@ public class User {
     public void deleteForest(){
         this.forest = null;
     }
+
+    public void updateDeleteFlag(){
+        this.deleteFlag = true;
+    }
 }

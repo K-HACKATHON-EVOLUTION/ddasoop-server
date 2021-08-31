@@ -35,6 +35,16 @@ public class UserApiController {
         }
     }
 
+    @DeleteMapping("/{userIdx}")
+    public ResponseEntity<Object> deleteUser(@PathVariable Long userIdx){
+        try{
+            return ResponseEntity.ok().body(userService.deleteUser(userIdx));
+        }catch(Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail");
+        }
+    }
+
     @PatchMapping("/{userIdx}/userName")
     public ResponseEntity<Object> updateUserName(@PathVariable Long userIdx, @RequestBody UserUpdateRequestDto requestDto){
         try{
