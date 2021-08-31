@@ -3,12 +3,11 @@ package com.evolution.ddasoop.web;
 import com.evolution.ddasoop.service.UserService;
 import com.evolution.ddasoop.web.dto.UserMainResponseDto;
 import com.evolution.ddasoop.web.dto.UserResponseDto;
+import com.evolution.ddasoop.web.dto.UserUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -32,6 +31,16 @@ public class UserApiController {
         }catch(Exception e){
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PatchMapping("/api/users/{userIdx}/userName")
+    public ResponseEntity<Object> updateUserName(@PathVariable Long userIdx, @RequestBody UserUpdateRequestDto requestDto){
+        try{
+            return ResponseEntity.ok().body(userService.updateUserName(userIdx, requestDto));
+        }catch(Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail");
         }
     }
 }

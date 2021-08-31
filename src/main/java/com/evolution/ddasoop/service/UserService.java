@@ -3,6 +3,7 @@ package com.evolution.ddasoop.service;
 import com.evolution.ddasoop.domain.*;
 import com.evolution.ddasoop.web.dto.UserMainResponseDto;
 import com.evolution.ddasoop.web.dto.UserResponseDto;
+import com.evolution.ddasoop.web.dto.UserUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,5 +40,17 @@ public class UserService {
                 .userName(user.getUserName())
                 .treeImg(treeImg.getFilePath()+treeImg.getOriginalFileName())
                 .build();
+    }
+
+    @Transactional
+    public String updateUserName(Long userIdx, UserUpdateRequestDto requestDto) throws IllegalArgumentException{
+        User user = userRepository.findByUserIdxAndDeleteFlagFalse(userIdx);
+        String userName = requestDto.getUserName();
+        if(user == null || userName == null || userName.length() < 1){
+            throw new IllegalArgumentException();
+        }
+
+        user.updateUserName(userName);
+        return "success";
     }
 }
