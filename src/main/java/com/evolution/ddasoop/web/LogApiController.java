@@ -23,7 +23,7 @@ public class LogApiController {
     }
 
     @PostMapping("/api/users/{userIdx}/logs")
-    public ResponseEntity<Long> saveLog(@PathVariable Long userIdx, @RequestBody LogRequestDto requestDto){
+    public ResponseEntity<Long> saveLog(@PathVariable String userIdx, @RequestBody LogRequestDto requestDto){
         try{
             return new ResponseEntity<>(logService.saveLog(userIdx, requestDto), HttpStatus.OK);
         }catch(Exception e){

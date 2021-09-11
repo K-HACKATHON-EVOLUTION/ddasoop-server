@@ -10,7 +10,7 @@ import lombok.ToString;
 @ToString
 public class TreeResponseDto {
     private Long treeIdx;
-    private Long userIdx;
+    private String userIdx;
     private Double treeCarbon;
     private Integer growth;
     private String treeImg;

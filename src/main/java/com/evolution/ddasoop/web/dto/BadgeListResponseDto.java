@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 public class BadgeListResponseDto {
     private Long badgeIdx;
-    private Long userIdx;
+    private String userIdx;
     private String badgeImg;
     private Long treeIdx;
 
