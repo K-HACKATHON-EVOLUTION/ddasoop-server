@@ -13,7 +13,7 @@ public class TreeService {
     private static final double TreeAmountStandard = 10.0;
 
     @Transactional
-    public TreeResponseDto getCurrentTree(Long userIdx){
+    public TreeResponseDto getCurrentTree(String userIdx){
         Tree tree = treeRepository.findByUserUserIdxAndTreeCarbonLessThan(userIdx,TreeAmountStandard);
         return new TreeResponseDto(tree);
     }

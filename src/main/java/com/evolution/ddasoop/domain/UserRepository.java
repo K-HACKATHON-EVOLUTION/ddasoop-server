@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    User findByUserIdxAndDeleteFlagFalse(Long userIdx);
+    User findByUserIdxAndDeleteFlagFalse(String userIdx);
 }

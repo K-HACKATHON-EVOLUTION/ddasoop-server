@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class UserResponseDto {
-    private Long userIdx;
+    private String userIdx;
     private String userName;
     private String treeImg;
 }

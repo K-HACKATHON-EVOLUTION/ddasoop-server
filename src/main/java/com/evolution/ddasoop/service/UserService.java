@@ -18,7 +18,7 @@ public class UserService {
 
 
     @Transactional(readOnly = true)
-    public UserMainResponseDto getMainInfo(Long userIdx) throws IllegalArgumentException{
+    public UserMainResponseDto getMainInfo(String userIdx) throws IllegalArgumentException{
         User user = userRepository.findByUserIdxAndDeleteFlagFalse(userIdx);
         if(user == null){
             throw new IllegalArgumentException();
@@ -28,7 +28,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserResponseDto getUser(Long userIdx) throws IllegalArgumentException{
+    public UserResponseDto getUser(String userIdx) throws IllegalArgumentException{
         User user = userRepository.findByUserIdxAndDeleteFlagFalse(userIdx);
         if(user == null){
             throw new IllegalArgumentException();
@@ -44,7 +44,7 @@ public class UserService {
     }
 
     @Transactional
-    public String deleteUser(Long userIdx) throws IllegalArgumentException{
+    public String deleteUser(String userIdx) throws IllegalArgumentException{
         User user = userRepository.findByUserIdxAndDeleteFlagFalse(userIdx);
         if(user == null){
             throw new IllegalArgumentException();
@@ -54,7 +54,7 @@ public class UserService {
     }
 
     @Transactional
-    public String updateUserName(Long userIdx, UserUpdateRequestDto requestDto) throws IllegalArgumentException{
+    public String updateUserName(String userIdx, UserUpdateRequestDto requestDto) throws IllegalArgumentException{
         User user = userRepository.findByUserIdxAndDeleteFlagFalse(userIdx);
         String userName = requestDto.getUserName();
         if(user == null || userName == null || userName.length() < 1){
@@ -66,7 +66,7 @@ public class UserService {
     }
 
     @Transactional
-    public String addForest(Long userIdx, Long forestIdx) throws IllegalArgumentException{
+    public String addForest(String userIdx, Long forestIdx) throws IllegalArgumentException{
         User user = userRepository.findByUserIdxAndDeleteFlagFalse(userIdx);
         Forest forest = forestRepository.findByForestIdxAndDeleteFlagFalse(forestIdx);
         if(user == null || forest == null){
@@ -78,7 +78,7 @@ public class UserService {
     }
 
     @Transactional
-    public String deleteForest(Long userIdx) throws IllegalArgumentException{
+    public String deleteForest(String userIdx) throws IllegalArgumentException{
         User user = userRepository.findByUserIdxAndDeleteFlagFalse(userIdx);
         if(user == null){
             throw new IllegalArgumentException();

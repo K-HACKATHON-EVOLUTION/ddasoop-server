@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class UserMainResponseDto {
-    private Long userIdx;
+    private String userIdx;
     private Double totalCarbon;
 
     public UserMainResponseDto(User entity){
