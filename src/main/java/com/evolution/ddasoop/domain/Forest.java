@@ -39,4 +39,10 @@ public class Forest {
     public void updateIntro(String forest_intro){
         this.forestIntro = forest_intro;
     }
+
+    public void updateDeleteFlag(Boolean flag){
+        this.deleteFlag =flag;
+    }
+
 }
+
