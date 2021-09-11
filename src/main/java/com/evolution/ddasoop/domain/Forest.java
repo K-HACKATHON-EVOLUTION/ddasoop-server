@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name="forest")
+@Table(name= "forest")
 public class Forest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

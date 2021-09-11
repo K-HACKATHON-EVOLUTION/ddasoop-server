@@ -3,6 +3,7 @@ package com.evolution.ddasoop.service;
 import com.evolution.ddasoop.domain.*;
 import com.evolution.ddasoop.web.dto.UserMainResponseDto;
 import com.evolution.ddasoop.web.dto.UserResponseDto;
+import com.evolution.ddasoop.web.dto.UserSaveRequestDto;
 import com.evolution.ddasoop.web.dto.UserUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final TreeRepository treeRepository;
     private final ForestRepository forestRepository;
+    private final ImageRepository imageRepository;
     private final double TreeAmountStandard = 10.0;
 
 
@@ -25,6 +27,31 @@ public class UserService {
         }
 
         return new UserMainResponseDto(user);
+    }
+
+    @Transactional
+    public String saveUser(UserSaveRequestDto requestDto) throws IllegalArgumentException{
+        User user = userRepository.findByUserIdxAndDeleteFlagFalse(requestDto.getUserIdx());
+        if(user != null){
+            throw new IllegalArgumentException();
+        }
+        user = User.builder()
+                .userIdx(requestDto.getUserIdx())
+                .userName(requestDto.getUserName())
+                .deleteFlag(false)
+                .forest(null)
+                .totalCarbon(0.0)
+                .build();
+        userRepository.save(user);
+
+        treeRepository.save(Tree.builder()
+                .user(user)
+                .treeCarbon(0.0)
+                .growth(1)
+                .treeImg(imageRepository.findImagesByImageIdx(Long.valueOf(1)))
+                .build());
+
+        return "success";
     }
 
     @Transactional(readOnly = true)
