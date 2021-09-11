@@ -3,10 +3,12 @@ package com.evolution.ddasoop.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @Entity
 @Table(name="user")
@@ -43,5 +45,9 @@ public class User {
         this.deleteFlag = deleteFlag;
         this.totalCarbon = totalCarbon;
         this.forest = forest;
+    }
+
+    public void updateDeleteFlag(Boolean flag){
+        this.deleteFlag =flag;
     }
 }

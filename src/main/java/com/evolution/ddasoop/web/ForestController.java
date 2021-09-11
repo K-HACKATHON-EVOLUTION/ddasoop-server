@@ -1,13 +1,16 @@
 package com.evolution.ddasoop.web;
 
+import com.evolution.ddasoop.domain.Forest;
 import com.evolution.ddasoop.service.ForestService;
 import com.evolution.ddasoop.service.UserService;
 import com.evolution.ddasoop.web.dto.ForestListResponseDto;
 import com.evolution.ddasoop.web.dto.MyForestDto;
+import com.evolution.ddasoop.web.dto.SearchForestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -21,19 +24,20 @@ public class ForestController {
 
     //1. Group List 페이지 숲 목록 불러오기 **그룹 리스트 반환(탄소저감량순)**
     // !!이 목록 아니잖아 멍청아./..다시해라.. 탄소 저감량 순 아직 안 넣음
-    @GetMapping("/forests")
+    /*@GetMapping("/forests")
     public ResponseEntity<ForestListResponseDto> ForestList(){
         final ForestListResponseDto forestListResponseDto = ForestListResponseDto.builder()
                 .forestList(forestService.findAll())
                 .build();
         return ResponseEntity.ok(forestListResponseDto);
+    }*/
+
+    @GetMapping("/forests")
+    public List<ForestListResponseDto> getForestList(){
+        return forestService.getAllForest();
     }
 
     //2. Group List 페이지 MY 숲 가져오기 **내 그룹 반환(리스트 컨테이너 형태)**
-    /*user애서 forest_idx 찾음
-    * 해당 forest_idx를 받아와서 forest에서 찾음
-    * 그걸 반환함
-    * */
     @GetMapping("/users/{user_idx}/forest")
     public MyForestDto getMyForest(@PathVariable("user_idx") Long user_idx){
         return userService.getMyForest(user_idx);
@@ -48,10 +52,9 @@ public class ForestController {
     }
 
     //4. 숲 검색하기 그룹 검색(특정 텍스트값 그룹 이름에 포함하고 있는 그룹을 리스트로 반환)
-    /*
-    * 이름으로 검색*/
-    @GetMapping("/forest/{forest_idx}/list")
-    public void searchForest(@PathVariable("forest_idx") Long forest_idx){
+    @GetMapping("/forest/search")
+    public List<SearchForestDto> searchForest(@RequestParam(value="forest_name", required = false, defaultValue = "") String forestName){
+        return forestService.searchForests(forestName);
     }
 
     //5. 그룹 생성(사진, 숲 이름, 숲 소개, 리더값 받기)
@@ -78,15 +81,14 @@ public class ForestController {
 
     // 9.  그룹 삭제(리더&그룹원의 그룹 탈퇴)
     @DeleteMapping("/forests/{forest_idx}")
-    public void deleteForest(@PathVariable("forest_idx") long forest_idx){
-        //숲 삭제
-        //그룹원 및 리더에게서 숲 idx 삭제
+    public String deleteForest(@PathVariable("forest_idx") long forest_idx){
+        return forestService.deleteForest(forest_idx);
     }
 
     //10.  그룹원 삭제(그룹원의 그룹 탈퇴)
     @DeleteMapping("/forests/{forest_idx}/users/{user_idx}")
-    public void deleteForestMember(@PathVariable("forest_idx") long forest_idx, @PathVariable("user_idx") long user_idx){
-
+    public String deleteForestMember(@PathVariable("forest_idx") long forest_idx, @PathVariable("user_idx") long user_idx){
+        return forestService.deleteForestMember(forest_idx, user_idx);
     }
 
 
