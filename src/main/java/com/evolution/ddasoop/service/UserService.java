@@ -1,5 +1,7 @@
 package com.evolution.ddasoop.service;
 
+
+import com.evolution.ddasoop.web.dto.MyForestDto;
 import com.evolution.ddasoop.domain.*;
 import com.evolution.ddasoop.web.dto.UserMainResponseDto;
 import com.evolution.ddasoop.web.dto.UserResponseDto;
@@ -113,4 +115,16 @@ public class UserService {
         user.deleteForest();
         return "success";
     }
+
+    @Transactional
+    public MyForestDto getMyForest(Long user_idx) {
+        Forest forest = userRepository.findById(user_idx).get().getForest();
+        MyForestDto myForestDto = MyForestDto.builder()
+                .forestName(forest.getForestName())
+                .forestIdx(forest.getForestIdx())
+                .forestImg(forest.getForestImg())
+                .build();
+        return myForestDto;
+    }
+
 }
