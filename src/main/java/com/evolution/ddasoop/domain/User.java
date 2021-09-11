@@ -47,7 +47,28 @@ public class User {
         this.forest = forest;
     }
 
+
     public void updateDeleteFlag(Boolean flag){
         this.deleteFlag =flag;
+
+    public void updateUserName(String userName){
+        this.userName = userName;
+    }
+
+    public void updateTotalCarbon(Double carbon){
+        totalCarbon += carbon;
+    }
+
+    public void updateForest(Forest forest){
+        this.forest = forest;
+    }
+
+    public void deleteForest(){
+        this.forest = null;
+    }
+
+    public void updateDeleteFlag(){
+        this.deleteFlag = true;
+
     }
 }

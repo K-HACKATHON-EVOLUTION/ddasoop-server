@@ -1,5 +1,6 @@
 package com.evolution.ddasoop.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 public class Log{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer logIdx;
+    private Long logIdx;
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "userIdx")
@@ -37,4 +38,22 @@ public class Log{
 
     @Column
     private String endLocation;
+
+    private static final Double CARBON_CALCULATION = 0.232;
+
+    @Builder
+    public Log(User user, Double distance, LocalDateTime startTime, LocalDateTime endTime, Double carbon, String startLocation, String endLocation){
+        this.user = user;
+        this.distance = distance;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.carbon = carbon;
+        this.startLocation = startLocation;
+        this.endLocation = endLocation;
+    }
+
+    public Double calculateCarbon(Double increased){
+        carbon = (increased * CARBON_CALCULATION);
+        return carbon;
+    }
 }
