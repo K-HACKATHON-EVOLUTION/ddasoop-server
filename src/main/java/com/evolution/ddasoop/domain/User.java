@@ -42,6 +42,7 @@ public class User {
 
     public void updateDeleteFlag(Boolean flag){
         this.deleteFlag =flag;
+    }
 
     public void updateUserName(String userName){
         this.userName = userName;
