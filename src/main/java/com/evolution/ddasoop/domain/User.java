@@ -39,9 +39,9 @@ public class User {
         this.forest = forest;
     }
 
-
-    public void updateDeleteFlag(Boolean flag){
-        this.deleteFlag =flag;
+    public void updateDeleteFlag(Boolean flag) {
+        this.deleteFlag = flag;
+    }
 
     public void updateUserName(String userName){
         this.userName = userName;
@@ -61,6 +61,5 @@ public class User {
 
     public void updateDeleteFlag(){
         this.deleteFlag = true;
-
     }
 }
