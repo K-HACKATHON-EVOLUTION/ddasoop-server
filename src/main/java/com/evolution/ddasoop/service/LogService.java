@@ -46,7 +46,7 @@ public class LogService {
     }
 
     @Transactional
-    public Long saveLog(Long userIdx, LogRequestDto requestDto) throws IllegalArgumentException{
+    public Long saveLog(String userIdx, LogRequestDto requestDto) throws IllegalArgumentException{
         User user = userRepository.findByUserIdxAndDeleteFlagFalse(userIdx);
         if(user == null)
             throw new IllegalArgumentException();
