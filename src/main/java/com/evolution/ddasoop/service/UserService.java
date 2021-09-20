@@ -68,7 +68,7 @@ public class UserService {
         return UserResponseDto.builder()
                 .userIdx(user.getUserIdx())
                 .userName(user.getUserName())
-                .treeImg(treeImg.getFilePath()+treeImg.getOriginalFileName())
+                .treeImg(treeImg.getFilePath())
                 .build();
     }
 
@@ -117,7 +117,7 @@ public class UserService {
     }
 
     @Transactional
-    public MyForestDto getMyForest(Long user_idx) {
+    public MyForestDto getMyForest(String user_idx) {
         Forest forest = userRepository.findById(user_idx).get().getForest();
         MyForestDto myForestDto = MyForestDto.builder()
                 .forestName(forest.getForestName())

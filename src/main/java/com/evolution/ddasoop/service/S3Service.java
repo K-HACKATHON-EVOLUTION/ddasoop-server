@@ -50,5 +50,5 @@ public class S3Service {
                 .withCannedAcl(CannedAccessControlList.PublicRead));
 
         return fileName;
-
+    }
 }
