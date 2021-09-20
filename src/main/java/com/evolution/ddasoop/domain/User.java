@@ -27,7 +27,7 @@ public class User {
     private Double totalCarbon;
 
     @ManyToOne(targetEntity = Forest.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "forestIdx")
+    @JoinColumn(name = "forest_idx")
     private Forest forest;
 
     @Builder

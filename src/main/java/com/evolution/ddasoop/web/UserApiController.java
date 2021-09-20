@@ -17,12 +17,12 @@ public class UserApiController {
     private final UserService userService;
 
     @GetMapping("/{userIdx}/main")
-    public ResponseEntity<UserMainResponseDto> getMainInfo(@PathVariable String userIdx){
+    public ResponseEntity<Object> getMainInfo(@PathVariable String userIdx){
         try{
-            return new ResponseEntity<>(userService.getMainInfo(userIdx),HttpStatus.OK);
+            return ResponseEntity.ok().body(userService.getMainInfo(userIdx));
         }catch(Exception e){
             e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail");
         }
     }
 
