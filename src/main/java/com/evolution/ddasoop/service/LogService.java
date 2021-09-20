@@ -26,7 +26,7 @@ public class LogService {
     private static final double TreeAmountStandard = 10.0;
 
     @Transactional(readOnly = true)
-    public LogMonthResponseDto getMonthlyLog(Long userIdx){
+    public LogMonthResponseDto getMonthlyLog(String userIdx){
         List<Log> logs = logRepository.findAllByUserUserIdxOrderByEndTimeDesc(userIdx);
         Double treeAmount = 0.0;
         List<LocalDate> logDates = new ArrayList<>();
@@ -94,7 +94,7 @@ public class LogService {
     }
 
     @Transactional(readOnly = true)
-    public List<LogListResponseDto> getLogs(Long userIdx){
+    public List<LogListResponseDto> getLogs(String userIdx){
         List<LogListResponseDto> logs = new ArrayList<>();
         for(Log log : logRepository.findAllByUserUserIdxOrderByEndTimeDesc(userIdx)){
             LocalDate logDate = log.getStartTime().toLocalDate();
@@ -116,7 +116,7 @@ public class LogService {
     }
 
     @Transactional(readOnly = true)
-    public LogResponseDto getLog(Long userIdx, Long logIdx){
+    public LogResponseDto getLog(String userIdx, Long logIdx){
         return new LogResponseDto(logRepository.findLogByUserUserIdxAndLogIdx(userIdx, logIdx));
     }
 }
