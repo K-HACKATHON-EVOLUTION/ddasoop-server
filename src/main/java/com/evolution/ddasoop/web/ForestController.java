@@ -1,15 +1,17 @@
 package com.evolution.ddasoop.web;
 
-import com.evolution.ddasoop.domain.Forest;
 import com.evolution.ddasoop.service.ForestService;
+import com.evolution.ddasoop.service.S3Service;
 import com.evolution.ddasoop.service.UserService;
 import com.evolution.ddasoop.web.dto.ForestListResponseDto;
+import com.evolution.ddasoop.web.dto.ForestMemberListDto;
 import com.evolution.ddasoop.web.dto.MyForestDto;
 import com.evolution.ddasoop.web.dto.SearchForestDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +23,7 @@ public class ForestController {
 
     private final ForestService forestService;
     private final UserService userService;
+    private S3Service s3Service;
 
     //1. Group List 페이지 숲 목록 불러오기 **그룹 리스트 반환(탄소저감량순)**
     // !!이 목록 아니잖아 멍청아./..다시해라.. 탄소 저감량 순 아직 안 넣음
@@ -63,7 +66,10 @@ public class ForestController {
 
     // 6.  그룹 사진 수정
     @PatchMapping("/forests/{forest_idx}/photo")
-    public void updateForestPhoto(){}
+    public String updateForestPhoto(MultipartFile file) throws IOException {
+        String imgPath = s3Service.upload(file);
+        return "redirect:/forests/{forest_idx}/photo";
+    }
 
     //7.  그룹 이름 편집
     @PatchMapping("/forests/{forest_idx}/name")
