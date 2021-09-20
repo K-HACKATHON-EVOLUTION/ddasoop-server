@@ -54,7 +54,7 @@ public class ForestService {
     }
 
     @Transactional
-    public String deleteForestMember(long forest_idx, long user_idx){
+    public String deleteForestMember(long forest_idx, String user_idx){
         User user = userRepository.findById(user_idx).get();
         if(user.getForest().getForestIdx() == forest_idx){
             user.setForest(null);

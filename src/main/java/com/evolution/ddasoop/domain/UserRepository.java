@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, String> {
     User findByUserIdxAndDeleteFlagFalse(String userIdx);
     List<User> findAllByForest(Forest forest);
 }
