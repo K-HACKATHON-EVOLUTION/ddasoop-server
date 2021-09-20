@@ -21,6 +21,10 @@ public class ForestController {
 
     private final ForestService forestService;
     private final UserService userService;
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 
     //1. Group List 페이지 숲 목록 불러오기 **그룹 리스트 반환(탄소저감량순)**
     // !!이 목록 아니잖아 멍청아./..다시해라.. 탄소 저감량 순 아직 안 넣음
@@ -63,7 +67,13 @@ public class ForestController {
 
     // 6.  그룹 사진 수정
     @PatchMapping("/forests/{forest_idx}/photo")
+<<<<<<< Updated upstream
     public void updateForestPhoto(){}
+=======
+    public String updateForestPhoto(MultipartFile file) throws IOException {
+        return "redirect:/forests/{forest_idx}/photo";
+    }
+>>>>>>> Stashed changes
 
     //7.  그룹 이름 편집
     @PatchMapping("/forests/{forest_idx}/name")
