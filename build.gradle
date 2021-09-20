@@ -34,7 +34,12 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 
+    compile('com.amazonaws:aws-java-sdk:1.12.70')
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.5.0'
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.5.0'
+
     compile group: 'org.springframework.cloud', name: 'spring-cloud-aws', version: '2.2.1.RELEASE'
+
 }
 
 test {
