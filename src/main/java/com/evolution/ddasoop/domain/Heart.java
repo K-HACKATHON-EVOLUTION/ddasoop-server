@@ -7,7 +7,7 @@ public class Heart {
 
     private Timestamp date;
 
-    private String userIdx;
+    private Integer userIdx;
 
     private Integer courseIdx;
 

@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @Builder
 public class LogMonthResponseDto {
-    private String userIdx;
+    private Long userIdx;
     private Integer logCnt;
     private Double treeAmount;
     private List<LocalDate> logDates;

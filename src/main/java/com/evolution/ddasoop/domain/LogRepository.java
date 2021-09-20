@@ -7,6 +7,6 @@ import java.util.List;
 
 @Repository
 public interface LogRepository extends JpaRepository<Log, Long> {
-    List<Log> findAllByUserUserIdxOrderByEndTimeDesc(String userIdx);
-    Log findLogByUserUserIdxAndLogIdx(String userIdx, Long logIdx);
+    List<Log> findAllByUserUserIdxOrderByEndTimeDesc(Long userIdx);
+    Log findLogByUserUserIdxAndLogIdx(Long userIdx, Long logIdx);
 }

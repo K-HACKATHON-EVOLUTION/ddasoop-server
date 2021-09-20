@@ -18,7 +18,7 @@ public class LogApiController {
     private final LogService logService;
 
     @GetMapping("/api/users/{userIdx}/logs/monthly")
-    public LogMonthResponseDto getMonthlyLog(@PathVariable String userIdx){
+    public LogMonthResponseDto getMonthlyLog(@PathVariable Long userIdx){
         return logService.getMonthlyLog(userIdx);
     }
 
@@ -33,12 +33,12 @@ public class LogApiController {
     }
 
     @GetMapping("/api/users/{userIdx}/logs")
-    public List<LogListResponseDto> getLogs(@PathVariable String userIdx){
+    public List<LogListResponseDto> getLogs(@PathVariable Long userIdx){
         return logService.getLogs(userIdx);
     }
 
     @GetMapping("/api/users/{userIdx}/logs/{logIdx}")
-    public LogResponseDto getLog(@PathVariable String userIdx, @PathVariable Long logIdx){
+    public LogResponseDto getLog(@PathVariable Long userIdx, @PathVariable Long logIdx){
         return logService.getLog(userIdx,logIdx);
     }
 }

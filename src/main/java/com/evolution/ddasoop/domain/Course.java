@@ -3,7 +3,7 @@ package com.evolution.ddasoop.domain;
 import java.sql.Timestamp;
 
 public class Course {
-    private String userIdx;
+    private Long userIdx;
 
     private Integer courseIdx;
 
