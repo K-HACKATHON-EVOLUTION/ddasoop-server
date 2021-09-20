@@ -11,21 +11,14 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name="user")
+@Table(name= "user")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userIdx;
+    private String userIdx;
 
     @Column
     private String userName;
-
-    @Column
-    private String userEmail;
-
-    @Column
-    private String userPassword;
 
     @Column
     private Boolean deleteFlag;
@@ -38,18 +31,17 @@ public class User {
     private Forest forest;
 
     @Builder
-    public User(String userName, String userEmail, String userPassword, Boolean deleteFlag, Double totalCarbon, Forest forest){
+    public User(String userIdx, String userName, Boolean deleteFlag, Double totalCarbon, Forest forest){
+        this.userIdx = userIdx;
         this.userName = userName;
-        this.userEmail = userEmail;
-        this.userPassword = userPassword;
         this.deleteFlag = deleteFlag;
         this.totalCarbon = totalCarbon;
         this.forest = forest;
     }
 
-
-    public void updateDeleteFlag(Boolean flag){
-        this.deleteFlag =flag;
+    public void updateDeleteFlag(Boolean flag) {
+        this.deleteFlag = flag;
+    }
 
     public void updateUserName(String userName){
         this.userName = userName;
@@ -69,6 +61,5 @@ public class User {
 
     public void updateDeleteFlag(){
         this.deleteFlag = true;
-
     }
 }

@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name="tree")
+@Table(name= "tree")
 public class Tree {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

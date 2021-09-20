@@ -7,10 +7,6 @@ import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-
-    User findUserByUserIdx(Long userIdx);
+    User findByUserIdxAndDeleteFlagFalse(String userIdx);
     List<User> findAllByForest(Forest forest);
-
-    User findByUserIdxAndDeleteFlagFalse(Long userIdx);
-
 }

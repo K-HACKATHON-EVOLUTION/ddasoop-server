@@ -22,7 +22,7 @@ public class BadgeService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public List<BadgeListResponseDto> getBadges(Long userIdx) throws IllegalArgumentException{
+    public List<BadgeListResponseDto> getBadges(String userIdx) throws IllegalArgumentException{
         User user = userRepository.findByUserIdxAndDeleteFlagFalse(userIdx);
 
         if(user == null) throw new IllegalArgumentException();

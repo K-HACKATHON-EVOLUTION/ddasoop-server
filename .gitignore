@@ -3,9 +3,5 @@
 .idea/
 build/
 .DS_Store
-<<<<<<< Updated upstream
-src/main/resources/application-datasource.properties
-=======
 src/main/resources/application-datasource.properties
 src/main/resources/application-aws.yml
->>>>>>> Stashed changes

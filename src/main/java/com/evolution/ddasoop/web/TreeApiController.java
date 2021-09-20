@@ -13,7 +13,7 @@ public class TreeApiController {
     private final TreeService treeService;
 
     @GetMapping("/api/users/{userIdx}/trees/current")
-    public TreeResponseDto getCurrentTree(@PathVariable Long userIdx){
+    public TreeResponseDto getCurrentTree(@PathVariable String userIdx){
         return treeService.getCurrentTree(userIdx);
     }
 }
