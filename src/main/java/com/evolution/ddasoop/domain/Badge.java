@@ -17,19 +17,19 @@ public class Badge {
     private Long badgeIdx;
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "userIdx")
+    @JoinColumn(name = "user_idx")
     private User user;
 
     @OneToOne
-    @JoinColumn(name = "badgeImg")
-    private Image badgeImg;
+    @JoinColumn(name = "badge_img_idx")
+    private BadgeImage badgeImg;
 
     @ManyToOne(targetEntity = Tree.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "treeIdx")
+    @JoinColumn(name = "tree_idx")
     private Tree tree;
 
     @Builder
-    public Badge(User user, Image badgeImg, Tree tree){
+    public Badge(User user, BadgeImage badgeImg, Tree tree){
         this.user = user;
         this.badgeImg = badgeImg;
         this.tree = tree;

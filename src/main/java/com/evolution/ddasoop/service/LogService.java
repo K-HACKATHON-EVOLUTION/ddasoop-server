@@ -13,7 +13,9 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
@@ -23,13 +25,14 @@ public class LogService {
     private final TreeRepository treeRepository;
     private final ImageRepository imageRepository;
     private final BadgeRepository badgeRepository;
+    private final BadgeImageRepository badgeImageRepository;
     private static final double TreeAmountStandard = 10.0;
 
     @Transactional(readOnly = true)
-    public LogMonthResponseDto getMonthlyLog(Long userIdx){
+    public LogMonthResponseDto getMonthlyLog(String userIdx){
         List<Log> logs = logRepository.findAllByUserUserIdxOrderByEndTimeDesc(userIdx);
         Double treeAmount = 0.0;
-        List<LocalDate> logDates = new ArrayList<>();
+        Set<LocalDate> logDates = new HashSet<>();
 
         for(Log log : logs){
             treeAmount += log.getCarbon();
@@ -37,6 +40,7 @@ public class LogService {
                 logDates.add(log.getStartTime().toLocalDate());
             }
         }
+        treeAmount = Double.valueOf(Math.round(treeAmount*1000)/1000.0);
         return LogMonthResponseDto.builder()
                 .userIdx(userIdx)
                 .logCnt(logs.size())
@@ -57,6 +61,7 @@ public class LogService {
                 .endTime(requestDto.getEndTime())
                 .startLocation(requestDto.getStartLocation())
                 .endLocation(requestDto.getEndLocation())
+                .route(requestDto.getRoute())
                 .distance(requestDto.getDistance())
                 .build();
 
@@ -64,7 +69,6 @@ public class LogService {
 
         Double carbon = log.calculateCarbon(requestDto.getDistance());
         user.updateTotalCarbon(carbon);
-        userRepository.save(user);
 
         Tree tree = treeRepository.findByUserUserIdxAndTreeCarbonLessThan(userIdx,TreeAmountStandard);
         Double remain = tree.updateTree(carbon);
@@ -74,7 +78,7 @@ public class LogService {
             Badge badge = Badge.builder()
                     .user(user)
                     .tree(tree)
-                    .badgeImg(imageRepository.findImagesByImageIdx(Long.valueOf(6)))
+                    .badgeImg(badgeImageRepository.findBadgeImageByBadgeImgIdx(Long.valueOf(1)))
                     .build();
             badgeRepository.save(badge);
 
@@ -94,7 +98,7 @@ public class LogService {
     }
 
     @Transactional(readOnly = true)
-    public List<LogListResponseDto> getLogs(Long userIdx){
+    public List<LogListResponseDto> getLogs(String userIdx){
         List<LogListResponseDto> logs = new ArrayList<>();
         for(Log log : logRepository.findAllByUserUserIdxOrderByEndTimeDesc(userIdx)){
             LocalDate logDate = log.getStartTime().toLocalDate();
@@ -116,7 +120,7 @@ public class LogService {
     }
 
     @Transactional(readOnly = true)
-    public LogResponseDto getLog(Long userIdx, Long logIdx){
+    public LogResponseDto getLog(String userIdx, Long logIdx){
         return new LogResponseDto(logRepository.findLogByUserUserIdxAndLogIdx(userIdx, logIdx));
     }
 }

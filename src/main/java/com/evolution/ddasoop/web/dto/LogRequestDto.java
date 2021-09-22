@@ -14,14 +14,16 @@ public class LogRequestDto {
     private LocalDateTime endTime;
     private String startLocation;
     private String endLocation;
+    private String route;
     private Double distance;
 
     @Builder
-    public LogRequestDto(LocalDateTime startTime, LocalDateTime endTime, String startLocation, String endLocation, Double distance){
+    public LogRequestDto(LocalDateTime startTime, LocalDateTime endTime, String startLocation, String endLocation, String route, Double distance){
         this.startTime = startTime;
         this.endTime = endTime;
         this.startLocation = startLocation;
         this.endLocation = endLocation;
+        this.route = route;
         this.distance = distance;
     }
 }
