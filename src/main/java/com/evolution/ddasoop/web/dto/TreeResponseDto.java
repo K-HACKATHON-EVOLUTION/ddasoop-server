@@ -10,7 +10,7 @@ import lombok.ToString;
 @ToString
 public class TreeResponseDto {
     private Long treeIdx;
-    private Long userIdx;
+    private String userIdx;
     private Double treeCarbon;
     private Integer growth;
     private String treeImg;
@@ -20,6 +20,6 @@ public class TreeResponseDto {
         this.userIdx = entity.getUser().getUserIdx();
         this.treeCarbon = entity.getTreeCarbon();
         this.growth = entity.getGrowth();
-        this.treeImg = entity.getTreeImg().getFilePath()+entity.getTreeImg().getOriginalFileName();
+        this.treeImg = entity.getTreeImg().getFilePath();
     }
 }

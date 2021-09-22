@@ -9,14 +9,14 @@ import java.util.List;
 @Getter
 public class BadgeListResponseDto {
     private Long badgeIdx;
-    private Long userIdx;
+    private String userIdx;
     private String badgeImg;
     private Long treeIdx;
 
     public BadgeListResponseDto(Badge entity){
         this.badgeIdx = entity.getBadgeIdx();
         this.userIdx = entity.getUser().getUserIdx();
-        this.badgeImg = entity.getBadgeImg().getFilePath()+entity.getBadgeImg().getOriginalFileName();
+        this.badgeImg = entity.getBadgeImg().getFilePath();
         this.treeIdx = entity.getTree().getTreeIdx();
     }
 }

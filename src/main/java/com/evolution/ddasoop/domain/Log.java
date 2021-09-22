@@ -5,20 +5,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name="log")
+@Table(name= "log")
 public class Log{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long logIdx;
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "userIdx")
+    @JoinColumn(name = "user_idx")
     private User user;
 
     @Column

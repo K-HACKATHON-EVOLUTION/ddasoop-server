@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface BadgeRepository extends JpaRepository<Badge, Long> {
-    List<Badge> findAllByUserUserIdx(Long userIdx);
+    List<Badge> findAllByUserUserIdx(String userIdx);
 }
