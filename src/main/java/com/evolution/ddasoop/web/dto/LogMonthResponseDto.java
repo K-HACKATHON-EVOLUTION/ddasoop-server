@@ -6,14 +6,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
 @Builder
 public class LogMonthResponseDto {
-    private Long userIdx;
+    private String userIdx;
     private Integer logCnt;
     private Double treeAmount;
-    private List<LocalDate> logDates;
+    private Set<LocalDate> logDates;
 }

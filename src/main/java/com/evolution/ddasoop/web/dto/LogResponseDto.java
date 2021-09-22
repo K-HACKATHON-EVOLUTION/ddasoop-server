@@ -12,6 +12,7 @@ public class LogResponseDto {
     private LocalDateTime logDateTime;
     private String startLocation;
     private String endLocation;
+    private String route;
     private Long hours;
     private Long minutes;
     private Double distance;
@@ -22,6 +23,7 @@ public class LogResponseDto {
         this.logDateTime = entity.getStartTime();
         this.startLocation = entity.getStartLocation();
         this.endLocation = entity.getEndLocation();
+        this.route = entity.getRoute();
 
         Duration d = Duration.between(entity.getStartTime(), entity.getEndTime());
         this.hours = d.toHours();
