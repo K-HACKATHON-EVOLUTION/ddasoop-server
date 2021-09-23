@@ -1,32 +1,26 @@
 package com.evolution.ddasoop.web.dto;
 
-import com.evolution.ddasoop.domain.Forest;
-
-import com.evolution.ddasoop.domain.User;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-
-import java.util.List;
-
 
 @Getter
-@RequiredArgsConstructor
+@Builder
 public class ForestListResponseDto {
-    private final List<Forest> forestList;
 
-   /* private Long forestIdx;
+    private Long forestIdx;
+    private String leader;
     private String forestName;
     private Integer size;
     private String forestImg;
-    private double forest_carbon;
+    private boolean deleteFlag;
 
-    public ForestListResponseDto(Forest forest, User user) {
-        this.forestIdx = forest.getForestIdx();
-        this.forestName = forest.getForestName();
-        this.size = forest.getSize();
-        this.forestImg = forest.getForestImg();
-        this.forest_carbon = user.getTotalCarbon();
+    /*public ForestListResponseDto(Forest entity){
+        this.forestIdx =entity.getForestIdx();
+        this.leader = entity.getLeader();
+        this.forestName = entity.getForestName();
+        this.size = entity.getSize();
+        this. forestImg = entity.getForestImg();
+        this.deleteFlag = entity.getDeleteFlag();
     }*/
+
 }
