@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface ForestRepository extends JpaRepository<Forest, Long> {
     Forest findByForestIdxAndDeleteFlagFalse(Long forestIdx);
-  
+    List<Forest> findAllByDeleteFlagFalseOrderByForestName();
     List<Forest> findByForestNameContaining(String forest_name);
 }
 
