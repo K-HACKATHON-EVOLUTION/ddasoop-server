@@ -1,12 +1,18 @@
 package com.evolution.ddasoop.web.dto;
 
 
-public class ForestMemberListDto {
-    private String user_name;
-    private double total_carbon;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
-    public ForestMemberListDto(String user_name, double total_carbon) {
-        this.user_name = user_name;
-        this.total_carbon = total_carbon;
-    }
+import java.util.List;
+
+@Getter
+@Setter
+@Builder
+public class ForestMemberListDto {
+    private List member;
+    private String leader;
+    private double total_trees;
+
 }

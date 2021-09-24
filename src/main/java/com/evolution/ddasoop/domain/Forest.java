@@ -1,5 +1,6 @@
 package com.evolution.ddasoop.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,7 +19,7 @@ public class Forest {
     private String forestName;
 
     @Column
-    private Integer leader;
+    private String leader;
 
     @Column
     private Integer size;
@@ -31,6 +32,17 @@ public class Forest {
 
     @Column
     private String forestIntro;
+
+    @Builder
+    public Forest(Long forestIdx, String forestName, String leader, Integer size, String forestImg, Boolean deleteFlag, String forestIntro) {
+        this.forestIdx = forestIdx;
+        this.forestName = forestName;
+        this.leader = leader;
+        this.size = size;
+        this.forestImg = forestImg;
+        this.deleteFlag = deleteFlag;
+        this.forestIntro = forestIntro;
+    }
 
     public void updateName(String forest_name){
         this.forestName = forest_name;
