@@ -39,7 +39,7 @@ public class ForestController {
 
     //2. Group List 페이지 MY 숲 가져오기 **내 그룹 반환(리스트 컨테이너 형태)**
     @GetMapping("/users/{user_idx}/forest")
-    public MyForestDto getMyForest(@PathVariable("user_idx") Long user_idx){
+    public MyForestDto getMyForest(@PathVariable("user_idx") String user_idx){
         return userService.getMyForest(user_idx);
     }
 

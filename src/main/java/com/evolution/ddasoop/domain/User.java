@@ -27,7 +27,7 @@ public class User {
     private Double totalCarbon;
 
     @ManyToOne(targetEntity = Forest.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "forestIdx")
+    @JoinColumn(name = "forest_idx")
     private Forest forest;
 
     @Builder
@@ -38,10 +38,6 @@ public class User {
         this.totalCarbon = totalCarbon;
         this.forest = forest;
     }
-
-
-    public void updateDeleteFlag(Boolean flag){
-        this.deleteFlag =flag;
 
     public void updateUserName(String userName){
         this.userName = userName;
@@ -61,6 +57,5 @@ public class User {
 
     public void updateDeleteFlag(){
         this.deleteFlag = true;
-
     }
 }

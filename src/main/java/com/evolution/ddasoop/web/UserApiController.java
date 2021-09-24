@@ -1,8 +1,6 @@
 package com.evolution.ddasoop.web;
 
 import com.evolution.ddasoop.service.UserService;
-import com.evolution.ddasoop.web.dto.UserMainResponseDto;
-import com.evolution.ddasoop.web.dto.UserResponseDto;
 import com.evolution.ddasoop.web.dto.UserSaveRequestDto;
 import com.evolution.ddasoop.web.dto.UserUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -15,16 +13,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/users")
 public class UserApiController {
     private final UserService userService;
-
-    @GetMapping("/{userIdx}/main")
-    public ResponseEntity<UserMainResponseDto> getMainInfo(@PathVariable String userIdx){
-        try{
-            return new ResponseEntity<>(userService.getMainInfo(userIdx),HttpStatus.OK);
-        }catch(Exception e){
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
 
     @PostMapping("")
     public ResponseEntity<Object> saveUser(@RequestBody UserSaveRequestDto requestDto){
