@@ -3,7 +3,6 @@ package com.evolution.ddasoop.service;
 
 import com.evolution.ddasoop.web.dto.MyForestDto;
 import com.evolution.ddasoop.domain.*;
-import com.evolution.ddasoop.web.dto.UserMainResponseDto;
 import com.evolution.ddasoop.web.dto.UserResponseDto;
 import com.evolution.ddasoop.web.dto.UserSaveRequestDto;
 import com.evolution.ddasoop.web.dto.UserUpdateRequestDto;
@@ -19,17 +18,6 @@ public class UserService {
     private final ForestRepository forestRepository;
     private final ImageRepository imageRepository;
     private final double TreeAmountStandard = 10.0;
-
-
-    @Transactional(readOnly = true)
-    public UserMainResponseDto getMainInfo(String userIdx) throws IllegalArgumentException{
-        User user = userRepository.findByUserIdxAndDeleteFlagFalse(userIdx);
-        if(user == null){
-            throw new IllegalArgumentException();
-        }
-
-        return new UserMainResponseDto(user);
-    }
 
     @Transactional
     public String saveUser(UserSaveRequestDto requestDto) throws IllegalArgumentException{
@@ -69,6 +57,7 @@ public class UserService {
                 .userIdx(user.getUserIdx())
                 .userName(user.getUserName())
                 .treeImg(treeImg.getFilePath())
+                .totalCarbon(user.getTotalCarbon())
                 .build();
     }
 
@@ -118,7 +107,7 @@ public class UserService {
 
     @Transactional
     public MyForestDto getMyForest(String user_idx) {
-        Forest forest = userRepository.findById(user_idx).get().getForest();
+        Forest forest = userRepository.findByUserIdxAndDeleteFlagFalse(user_idx).getForest();
         MyForestDto myForestDto = MyForestDto.builder()
                 .forestName(forest.getForestName())
                 .forestIdx(forest.getForestIdx())
