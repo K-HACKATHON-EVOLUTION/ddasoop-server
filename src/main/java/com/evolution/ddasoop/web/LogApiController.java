@@ -23,12 +23,12 @@ public class LogApiController {
     }
 
     @PostMapping("/api/users/{userIdx}/logs")
-    public ResponseEntity<Long> saveLog(@PathVariable String userIdx, @RequestBody LogRequestDto requestDto){
+    public ResponseEntity<Object> saveLog(@PathVariable String userIdx, @RequestBody LogRequestDto requestDto){
         try{
-            return new ResponseEntity<>(logService.saveLog(userIdx, requestDto), HttpStatus.OK);
+            return ResponseEntity.ok().body(logService.saveLog(userIdx, requestDto));
         }catch(Exception e){
             e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail");
         }
     }
 
