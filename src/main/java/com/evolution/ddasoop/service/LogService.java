@@ -50,7 +50,7 @@ public class LogService {
     }
 
     @Transactional
-    public Long saveLog(String userIdx, LogRequestDto requestDto) throws IllegalArgumentException{
+    public String saveLog(String userIdx, LogRequestDto requestDto) throws IllegalArgumentException{
         User user = userRepository.findByUserIdxAndDeleteFlagFalse(userIdx);
         if(user == null)
             throw new IllegalArgumentException();
@@ -72,16 +72,10 @@ public class LogService {
 
         Tree tree = treeRepository.findByUserUserIdxAndTreeCarbonLessThan(userIdx,TreeAmountStandard);
         Double remain = tree.updateTree(carbon);
+        boolean win = false;
 
         if(remain > 0.0){
-            //현재 트리가 완성되어 뱃지화 된 경우
-            Badge badge = Badge.builder()
-                    .user(user)
-                    .tree(tree)
-                    .badgeImg(badgeImageRepository.findBadgeImageByBadgeImgIdx(Long.valueOf(1)))
-                    .build();
-            badgeRepository.save(badge);
-
+            //현재 트리 완성
             Tree newTree = Tree.builder()
                     .treeCarbon(remain)
                     .user(user)
@@ -89,12 +83,30 @@ public class LogService {
             newTree.updateGrowth(remain);
             newTree.updateTreeImg(imageRepository.findImagesByImageIdx(newTree.getGrowth().longValue()));
             treeRepository.save(newTree);
+
+            long count = badgeImageRepository.count();
+            long index = (long) (Math.random() * (count * 2) + 1);
+            System.out.println(index);
+
+            if(index <= count){ //뱃지 획득
+                Badge badge = Badge.builder()
+                        .user(user)
+                        .tree(tree)
+                        .badgeImg(badgeImageRepository.findBadgeImageByBadgeImgIdx(index))
+                        .build();
+                badgeRepository.save(badge);
+                win = true;
+            }
         }
 
         tree.updateTreeImg(imageRepository.findImagesByImageIdx(tree.getGrowth().longValue()));
         treeRepository.save(tree);
 
-        return log.getLogIdx();
+        if(win){
+            return "success";
+        }else{
+            return "lose";
+        }
     }
 
     @Transactional(readOnly = true)
