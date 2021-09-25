@@ -1,10 +1,7 @@
 package com.evolution.ddasoop.web.dto;
 
 import com.evolution.ddasoop.domain.Badge;
-import lombok.Builder;
 import lombok.Getter;
-
-import java.util.List;
 
 @Getter
 public class BadgeListResponseDto {

@@ -16,7 +16,7 @@ public class Tree {
     private Long treeIdx;
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "userIdx")
+    @JoinColumn(name = "user_idx")
     private User user;
 
     @Column
@@ -26,7 +26,7 @@ public class Tree {
     private Integer growth;
 
     @OneToOne
-    @JoinColumn(name = "treeImg")
+    @JoinColumn(name = "tree_img")
     private Image treeImg;
 
     private static final Double MAX_TREE = 10.0;
@@ -44,7 +44,6 @@ public class Tree {
         Double tempCarbon = treeCarbon + carbon;
         Double i = (tempCarbon+0.5);
         Integer tempGrowth = (i.intValue()+1)/2;
-        System.out.println(i + " " + tempGrowth);
 
         if(tempGrowth > 5){
             this.treeCarbon = MAX_TREE;

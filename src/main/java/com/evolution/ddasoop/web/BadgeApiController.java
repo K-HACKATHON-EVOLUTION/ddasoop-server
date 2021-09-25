@@ -19,7 +19,7 @@ public class BadgeApiController {
     private final BadgeService badgeService;
 
     @GetMapping("/api/users/{userIdx}/badges")
-    public ResponseEntity<List<BadgeListResponseDto>> getBadges(@PathVariable String userIdx){
+    public ResponseEntity<Object> getBadges(@PathVariable String userIdx){
         try{
             return new ResponseEntity<>(badgeService.getBadges(userIdx), HttpStatus.OK);
         }catch(Exception e){
