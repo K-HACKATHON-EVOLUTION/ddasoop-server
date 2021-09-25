@@ -1,23 +1,20 @@
 package com.evolution.ddasoop.domain;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 
-
+@Getter
 @NoArgsConstructor
 @Entity
 @Table(name="course")
 public class Course {
 
-    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
-    @JoinColumn(name="user_idx")
-    private User user;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer courseIdx;
+    private Long courseIdx;
 
     @Column
     private String courseName;
@@ -28,7 +25,6 @@ public class Course {
     @Column
     private String theme;
 
-
     @Column
     private Timestamp courseDate;
 
@@ -36,6 +32,9 @@ public class Course {
     private Boolean deleteFlag;
 
     @Column
-    private Integer distance;
+    private Double distance;
+
+    @Column
+    private String location;
 
 }

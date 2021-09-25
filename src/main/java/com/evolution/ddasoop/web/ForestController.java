@@ -32,7 +32,6 @@ public class ForestController {
     }
 
     //3.그룹 하나 가져오기
-    // total_carbon 수정 필요
     @GetMapping("/forest/{forest_idx}/user")
     public ForestMemberListDto ForestUserList(@PathVariable("forest_idx") Long forest_idx){
         return forestService.getForest(forest_idx);

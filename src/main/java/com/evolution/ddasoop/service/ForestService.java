@@ -83,6 +83,7 @@ public class ForestService {
     @Transactional
     public String saveForest(String user_idx, ForestSaveDto forestSaveDto){
         User user = userRepository.findByUserIdxAndDeleteFlagFalse(user_idx);
+
         if(user.getForest() == null){
             Forest forest = Forest.builder()
                     .forestName(forestSaveDto.getForestName())
@@ -92,7 +93,6 @@ public class ForestService {
                     .size(forestSaveDto.getSize())
                     .deleteFlag(Boolean.FALSE)
                     .build();
-
             forestRepository.save(forest);
             user.setForest(forest);
             return "숲이 생성되었습니다";
