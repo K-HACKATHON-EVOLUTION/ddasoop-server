@@ -86,7 +86,6 @@ public class LogService {
 
             long count = badgeImageRepository.count();
             long index = (long) (Math.random() * (count * 2) + 1);
-            System.out.println(index);
 
             if(index <= count){ //뱃지 획득
                 Badge badge = Badge.builder()

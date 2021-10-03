@@ -18,10 +18,13 @@ public class UserService {
     private final ForestRepository forestRepository;
     private final ForestImageRepository forestImageRepository;
     private final ImageRepository imageRepository;
+    private final BadgeImageRepository badgeImageRepository;
+    private final BadgeRepository badgeRepository;
+
     private final double TreeAmountStandard = 10.0;
 
     @Transactional
-    public String saveUser(UserSaveRequestDto requestDto) throws IllegalArgumentException{
+    public Long saveUser(UserSaveRequestDto requestDto) throws IllegalArgumentException{
         User user = userRepository.findByUserIdxAndDeleteFlagFalse(requestDto.getUserIdx());
         if(user != null){
             throw new IllegalArgumentException();
@@ -35,6 +38,16 @@ public class UserService {
                 .build();
         userRepository.save(user);
 
+        long count = badgeImageRepository.count();
+        long index = (long) (Math.random() * count + 1);
+
+        Badge badge = Badge.builder()
+                .user(user)
+                .tree(null)
+                .badgeImg(badgeImageRepository.findBadgeImageByBadgeImgIdx(index))
+                .build();
+        badgeRepository.save(badge);
+
         treeRepository.save(Tree.builder()
                 .user(user)
                 .treeCarbon(0.0)
@@ -42,7 +55,7 @@ public class UserService {
                 .treeImg(imageRepository.findImagesByImageIdx(Long.valueOf(1)))
                 .build());
 
-        return "success";
+        return badge.getBadgeIdx();
     }
 
     @Transactional(readOnly = true)
