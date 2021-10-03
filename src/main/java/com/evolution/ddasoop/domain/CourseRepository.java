@@ -9,4 +9,5 @@ public interface CourseRepository extends JpaRepository<Course,Long> {
     Course findCourseByCourseIdxAndDeleteFlagFalse(Long course_idx);
     List<Course> findAllByThemeAndDeleteFlagFalseOrderByCourseDate(String theme);
     List<Course> findAllByDeleteFlagIsFalseOrderByCourseDate();
+    List<Course> findAllByDeleteFlagIsFalse();
 }

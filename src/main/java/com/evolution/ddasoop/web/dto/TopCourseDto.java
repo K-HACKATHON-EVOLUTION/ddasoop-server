@@ -10,7 +10,7 @@ public class TopCourseDto {
 
     private String course_intro;
     private String course_name;
-    private int heart;
+    private int course_heart;
     private String course_img;
 
 }

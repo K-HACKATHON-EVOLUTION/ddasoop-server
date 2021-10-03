@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,11 +24,16 @@ public class ForestService {
     @Transactional
     public List<ForestListResponseDto> getAllForest(){
      List<ForestListResponseDto> forests = new ArrayList<>();
+     List<User> users = new ArrayList<>();
+
      for (Forest forest: forestRepository.findAllByDeleteFlagFalseOrderByForestName()){
-         ForestImage forestImage = forestImageRepository.findForestImageByForest(forest);
-         if(forestImage == null){
-             break;
+         double forest_carbon=0;
+         for(User user: userRepository.findAllByDeleteFlagIsFalseAndForest(forest)){
+            forest_carbon += user.getTotalCarbon();
          }
+
+         ForestImage forestImage = forestImageRepository.findForestImageByForest(forest);
+
          forests.add(ForestListResponseDto.builder()
                  .forestIdx(forest.getForestIdx())
                  .leader(forest.getLeader())
@@ -35,8 +41,12 @@ public class ForestService {
                  .forestImg(forestImage.getFilePath())
                  .size(forest.getSize())
                  .deleteFlag(forest.getDeleteFlag())
+                 .carbon(forest_carbon)
                  .build());
      }
+
+        forests.sort(Comparator.comparing(ForestListResponseDto::getCarbon).reversed());
+
      return forests;
     }
 

@@ -109,9 +109,11 @@ public class UserService {
     @Transactional
     public MyForestDto getMyForest(String user_idx) {
         Forest forest = userRepository.findByUserIdxAndDeleteFlagFalse(user_idx).getForest();
+        ForestImage forestImage = forestImageRepository.findForestImageByForest(forest);
         MyForestDto myForestDto = MyForestDto.builder()
                 .forestName(forest.getForestName())
                 .forestIdx(forest.getForestIdx())
+                .forestImg(forestImage.getFilePath())
                 .build();
         return myForestDto;
     }

@@ -24,7 +24,6 @@ public class CourseApiController {
     }
 
     // 2. 전체 코스 반환(최신순)
-    //하트 수정
     @GetMapping("/courses")
     public List<TopCourseDto> getCourseList(){
         return courseService.getAllCourse();

@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface HeartRepository extends JpaRepository<Heart, Long> {
     Heart findHeartByCourseCourseIdxAndUserUserIdxAndDeleteFlagFalse(Long courseIdx, String userIdx);
+    Integer countHeartByCourseAndDeleteFlagFalse(Course course);
 }

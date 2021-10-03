@@ -20,6 +20,7 @@ public class ForestController {
     private final UserService userService;
 
     //1. Group List 페이지 숲 목록 불러오기
+    //탄소량 추가
     @GetMapping("/forests")
     public List<ForestListResponseDto> getForestList(){
         return forestService.getAllForest();
