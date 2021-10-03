@@ -16,6 +16,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final TreeRepository treeRepository;
     private final ForestRepository forestRepository;
+    private final ForestImageRepository forestImageRepository;
     private final ImageRepository imageRepository;
     private final double TreeAmountStandard = 10.0;
 
@@ -111,7 +112,6 @@ public class UserService {
         MyForestDto myForestDto = MyForestDto.builder()
                 .forestName(forest.getForestName())
                 .forestIdx(forest.getForestIdx())
-                .forestImg(forest.getForestImg())
                 .build();
         return myForestDto;
     }

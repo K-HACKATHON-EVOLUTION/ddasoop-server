@@ -1,5 +1,6 @@
 package com.evolution.ddasoop.web.dto;
 
+import com.evolution.ddasoop.domain.Forest;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,6 +14,7 @@ public class ForestListResponseDto {
     private Integer size;
     private String forestImg;
     private boolean deleteFlag;
+    private double carbon;
 
     /*public ForestListResponseDto(Forest entity){
         this.forestIdx =entity.getForestIdx();

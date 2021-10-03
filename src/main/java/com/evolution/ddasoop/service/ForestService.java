@@ -1,13 +1,11 @@
 package com.evolution.ddasoop.service;
 
-import com.evolution.ddasoop.domain.Forest;
-import com.evolution.ddasoop.domain.ForestRepository;
-import com.evolution.ddasoop.domain.User;
-import com.evolution.ddasoop.domain.UserRepository;
+import com.evolution.ddasoop.domain.*;
 import com.evolution.ddasoop.web.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,19 +17,25 @@ public class ForestService {
 
     private final ForestRepository forestRepository;
     private final UserRepository userRepository;
+    private final S3Service s3Service;
+    private final ForestImageRepository forestImageRepository;
 
     @Transactional
     public List<ForestListResponseDto> getAllForest(){
      List<ForestListResponseDto> forests = new ArrayList<>();
      for (Forest forest: forestRepository.findAllByDeleteFlagFalseOrderByForestName()){
-            forests.add(ForestListResponseDto.builder()
-                            .forestIdx(forest.getForestIdx())
-                            .leader(forest.getLeader())
-                            .forestName(forest.getForestName())
-                            .size(forest.getSize())
-                            .forestImg(forest.getForestImg())
-                            .deleteFlag(forest.getDeleteFlag())
-                    .build());
+         ForestImage forestImage = forestImageRepository.findForestImageByForest(forest);
+         if(forestImage == null){
+             break;
+         }
+         forests.add(ForestListResponseDto.builder()
+                 .forestIdx(forest.getForestIdx())
+                 .leader(forest.getLeader())
+                 .forestName(forest.getForestName())
+                 .forestImg(forestImage.getFilePath())
+                 .size(forest.getSize())
+                 .deleteFlag(forest.getDeleteFlag())
+                 .build());
      }
      return forests;
     }
@@ -81,7 +85,7 @@ public class ForestService {
     }
 
     @Transactional
-    public String saveForest(String user_idx, ForestSaveDto forestSaveDto){
+    public String createForest(String user_idx, ForestSaveDto forestSaveDto, MultipartFile photo){
         User user = userRepository.findByUserIdxAndDeleteFlagFalse(user_idx);
 
         if(user.getForest() == null){
@@ -95,6 +99,11 @@ public class ForestService {
                     .build();
             forestRepository.save(forest);
             user.setForest(forest);
+
+            //이미지 추가하기
+
+
+
             return "숲이 생성되었습니다";
         }
         else return"이미 가입된 숲이 존재합니다!";
@@ -110,6 +119,7 @@ public class ForestService {
             memberList.add(MemberListDto.builder()
                             .user_name(user.getUserName())
                             .user_carbon(user.getTotalCarbon())
+                            .user_idx(user.getUserIdx())
                     .build());
         }
 
@@ -125,5 +135,30 @@ public class ForestService {
                 .build();
 
         return forestMemberListDto;
+    }
+
+    @Transactional
+    public String updateForestPhoto(Long forest_idx, MultipartFile uploadFile){
+        String newPhoto;
+        Forest forest = forestRepository.findByForestIdxAndDeleteFlagFalse(forest_idx);
+        if(forest == null){
+            return "숲이 존재하지 않습니다. forest_idx: " +forest_idx;
+        }
+        try{
+            String oldPhoto = forest.getForestImg();
+            newPhoto = s3Service.update(oldPhoto,uploadFile);
+
+            if(newPhoto!=null){
+                forest.updatePhotoUrl("http://"+s3Service.CLOUD_FRONT_DOMAIN_NAME+"/"+newPhoto);
+                s3Service.delete(oldPhoto);
+            } else {
+                return "file type is not proper or is corrupted";
+            }
+
+        } catch (Exception e){
+            System.out.println("file exception");
+            return "error occured during upload" + e.getMessage();
+        }
+        return "숲 사진이 변경되었습니다";
     }
 }

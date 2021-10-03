@@ -56,5 +56,9 @@ public class Forest {
         this.deleteFlag =flag;
     }
 
+    public void updatePhotoUrl(String photoUrl){
+        this.forestImg = photoUrl;
+    }
+
 }
 

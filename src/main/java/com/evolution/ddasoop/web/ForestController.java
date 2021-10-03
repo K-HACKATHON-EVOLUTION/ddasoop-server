@@ -5,6 +5,7 @@ import com.evolution.ddasoop.service.UserService;
 import com.evolution.ddasoop.web.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,6 @@ public class ForestController {
     private final UserService userService;
 
     //1. Group List 페이지 숲 목록 불러오기
-    // **그룹 리스트 반환(탄소저감량순)**
     @GetMapping("/forests")
     public List<ForestListResponseDto> getForestList(){
         return forestService.getAllForest();
@@ -46,14 +46,17 @@ public class ForestController {
     //5. 숲 생성하기
     //이미지 수정
     @PostMapping("/forests/{user_idx}")
-    public String makeForest(@PathVariable String user_idx, @RequestBody ForestSaveDto forestSaveDto){
-        return forestService.saveForest(user_idx, forestSaveDto);
+    public String makeForest(@PathVariable String user_idx,
+                             @RequestBody ForestSaveDto forestSaveDto,
+                             @RequestBody MultipartFile photo){
+        return forestService.createForest(user_idx, forestSaveDto, photo);
     }
 
     // 6.  그룹 사진 수정
-    // 수정
     @PatchMapping("/forests/{forest_idx}/photo")
-    public void updateForestPhoto(){}
+    public String updateForestPhoto(@PathVariable Long forest_idx, @RequestParam("uploadFile") MultipartFile uploadFile){
+        return forestService.updateForestPhoto(forest_idx,uploadFile);
+    }
 
 
     //7.  그룹 이름 편집

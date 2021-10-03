@@ -9,4 +9,5 @@ public class MemberListDto {
 
     private String user_name;
     private double user_carbon;
+    private String user_idx;
 }
