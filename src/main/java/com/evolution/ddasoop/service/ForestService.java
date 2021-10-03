@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -83,18 +84,34 @@ public class ForestService {
     @Transactional
     public String saveForest(String user_idx, ForestSaveDto forestSaveDto){
         User user = userRepository.findByUserIdxAndDeleteFlagFalse(user_idx);
+<<<<<<< Updated upstream
+=======
+            //이미지 추가하기
+>>>>>>> Stashed changes
         if(user.getForest() == null){
             Forest forest = Forest.builder()
                     .forestName(forestSaveDto.getForestName())
                     .leader(user_idx)
                     .forestIntro(forestSaveDto.getForestIntro())
-                    .forestImg(forestSaveDto.getForestImg())
                     .size(forestSaveDto.getSize())
                     .deleteFlag(Boolean.FALSE)
                     .build();
 
             forestRepository.save(forest);
             user.setForest(forest);
+<<<<<<< Updated upstream
+=======
+
+            try{
+                ForestImage forestImage = s3Service.upload(photo,forest);
+                forestImageRepository.save(forestImage);
+            } catch(IOException e){
+                System.out.println("error");
+            }
+
+
+
+>>>>>>> Stashed changes
             return "숲이 생성되었습니다";
         }
         else return"이미 가입된 숲이 존재합니다!";

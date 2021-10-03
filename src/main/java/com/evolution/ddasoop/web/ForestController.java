@@ -19,7 +19,10 @@ public class ForestController {
     private final UserService userService;
 
     //1. Group List 페이지 숲 목록 불러오기
+<<<<<<< Updated upstream
     // **그룹 리스트 반환(탄소저감량순)**
+=======
+>>>>>>> Stashed changes
     @GetMapping("/forests")
     public List<ForestListResponseDto> getForestList(){
         return forestService.getAllForest();
@@ -52,7 +55,11 @@ public class ForestController {
     }
 
     // 6.  그룹 사진 수정
+<<<<<<< Updated upstream
     // 수정
+=======
+    //코드 수정
+>>>>>>> Stashed changes
     @PatchMapping("/forests/{forest_idx}/photo")
     public void updateForestPhoto(){}
 
