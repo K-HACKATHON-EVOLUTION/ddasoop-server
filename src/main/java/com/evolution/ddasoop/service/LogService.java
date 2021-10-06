@@ -28,7 +28,6 @@ public class LogService {
     private final ImageRepository imageRepository;
     private final BadgeRepository badgeRepository;
     private final BadgeImageRepository badgeImageRepository;
-    private static final double TreeAmountStandard = 10.0;
 
     @Transactional(readOnly = true)
     public LogMonthResponseDto getMonthlyLog(String userIdx, Month month) throws IllegalArgumentException{
@@ -79,7 +78,7 @@ public class LogService {
         Double carbon = log.calculateCarbon(requestDto.getDistance());
         user.updateTotalCarbon(carbon);
 
-        Tree tree = treeRepository.findByUserUserIdxAndTreeCarbonLessThan(userIdx,TreeAmountStandard);
+        Tree tree = treeRepository.findByUserUserIdxAndTreeCarbonLessThan(userIdx,Tree.MAX_TREE);
         Double remain = tree.updateTree(carbon);
         boolean win = false;
 
@@ -87,6 +86,7 @@ public class LogService {
             //현재 트리 완성
             Tree newTree = Tree.builder()
                     .treeCarbon(remain)
+                    .treeName("나무")
                     .user(user)
                     .build();
             newTree.updateGrowth(remain);
@@ -106,9 +106,17 @@ public class LogService {
                 win = true;
             }
         }
+        if(remain >= 0.0){
+            //기존 트리가 성장한 경우 이미지 교체
+            long index = tree.getGrowth().longValue();
 
-        tree.updateTreeImg(imageRepository.findImagesByImageIdx(tree.getGrowth().longValue()));
-        treeRepository.save(tree);
+            if(tree.getGrowth() == Tree.MAX_GROWTH){
+                //5단계 나무 이미지 선택
+                index = (long) (Math.random() * (imageRepository.count()-4) + 8);
+            }
+
+            tree.updateTreeImg(imageRepository.findImagesByImageIdx(index));
+        }
 
         if(win){
             return "success";

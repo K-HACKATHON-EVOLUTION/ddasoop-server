@@ -32,8 +32,8 @@ public class Tree {
     @JoinColumn(name = "tree_img")
     private Image treeImg;
 
-    private static final Double MAX_TREE = 10.0;
-    private static final Integer MAX_GROWTH = 5;
+    public static final Double MAX_TREE = 10.0;
+    public static final Integer MAX_GROWTH = 5;
 
     @Builder
     public Tree(User user, String treeName, Double treeCarbon, Integer growth, Image treeImg){
@@ -50,11 +50,18 @@ public class Tree {
         Integer tempGrowth = (i.intValue()+1)/2;
 
         if(tempGrowth > 5){
+            //기존 트리 완성
             this.treeCarbon = MAX_TREE;
             this.growth = MAX_GROWTH;
             return tempCarbon-MAX_TREE;
         }
+        else if (growth == tempGrowth){
+            //기존 트리 성장 안 함
+            this.treeCarbon = tempCarbon;
+            return -1.0;
+        }
         else{
+            //기존 트리 성장
             this.growth = tempGrowth;
             this.treeCarbon = tempCarbon;
             return 0.0;
