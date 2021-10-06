@@ -11,6 +11,7 @@ import lombok.ToString;
 public class TreeResponseDto {
     private Long treeIdx;
     private String userIdx;
+    private String treeName;
     private Double treeCarbon;
     private Integer growth;
     private String treeImg;
@@ -18,6 +19,7 @@ public class TreeResponseDto {
     public TreeResponseDto(Tree entity){
         this.treeIdx = entity.getTreeIdx();
         this.userIdx = entity.getUser().getUserIdx();
+        this.treeName = entity.getTreeName();
         this.treeCarbon = entity.getTreeCarbon();
         this.growth = entity.getGrowth();
         this.treeImg = entity.getTreeImg().getFilePath();

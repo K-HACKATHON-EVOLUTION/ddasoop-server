@@ -20,6 +20,9 @@ public class Tree {
     private User user;
 
     @Column
+    private String treeName;
+
+    @Column
     private Double treeCarbon;
 
     @Column
@@ -33,8 +36,9 @@ public class Tree {
     private static final Integer MAX_GROWTH = 5;
 
     @Builder
-    public Tree(User user, Double treeCarbon, Integer growth, Image treeImg){
+    public Tree(User user, String treeName, Double treeCarbon, Integer growth, Image treeImg){
         this.user = user;
+        this.treeName = treeName;
         this.treeCarbon = treeCarbon;
         this.growth = growth;
         this.treeImg = treeImg;
@@ -55,6 +59,10 @@ public class Tree {
             this.treeCarbon = tempCarbon;
             return 0.0;
         }
+    }
+
+    public void updateTreeName(String newName){
+        this.treeName = newName;
     }
 
     public void updateGrowth(Double carbon){
