@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -29,21 +30,23 @@ public class LogService {
     private static final double TreeAmountStandard = 10.0;
 
     @Transactional(readOnly = true)
-    public LogMonthResponseDto getMonthlyLog(String userIdx){
+    public LogMonthResponseDto getMonthlyLog(String userIdx, Month month){
         List<Log> logs = logRepository.findAllByUserUserIdxOrderByEndTimeDesc(userIdx);
         Double treeAmount = 0.0;
+        Integer logCnt = 0;
         Set<LocalDate> logDates = new HashSet<>();
 
         for(Log log : logs){
-            treeAmount += log.getCarbon();
-            if(log.getStartTime().getMonth() == LocalDateTime.now().getMonth()){
+            if(log.getStartTime().getMonth() == month){
                 logDates.add(log.getStartTime().toLocalDate());
+                treeAmount += log.getCarbon();
+                logCnt++;
             }
         }
         treeAmount = Double.valueOf(Math.round(treeAmount*1000)/1000.0);
         return LogMonthResponseDto.builder()
                 .userIdx(userIdx)
-                .logCnt(logs.size())
+                .logCnt(logCnt)
                 .treeAmount(treeAmount)
                 .logDates(logDates)
                 .build();

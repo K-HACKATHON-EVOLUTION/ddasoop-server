@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Month;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -17,9 +18,9 @@ import java.util.List;
 public class LogApiController {
     private final LogService logService;
 
-    @GetMapping("/api/users/{userIdx}/logs/monthly")
-    public LogMonthResponseDto getMonthlyLog(@PathVariable String userIdx){
-        return logService.getMonthlyLog(userIdx);
+    @GetMapping("/api/users/{userIdx}/logs/monthly/{month}")
+    public LogMonthResponseDto getMonthlyLog(@PathVariable String userIdx, @PathVariable int month){
+        return logService.getMonthlyLog(userIdx, Month.of(month));
     }
 
     @PostMapping("/api/users/{userIdx}/logs")
