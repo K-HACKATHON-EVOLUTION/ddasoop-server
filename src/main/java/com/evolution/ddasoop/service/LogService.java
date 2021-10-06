@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -30,8 +31,13 @@ public class LogService {
     private static final double TreeAmountStandard = 10.0;
 
     @Transactional(readOnly = true)
-    public LogMonthResponseDto getMonthlyLog(String userIdx, Month month){
-        List<Log> logs = logRepository.findAllByUserUserIdxOrderByEndTimeDesc(userIdx);
+    public LogMonthResponseDto getMonthlyLog(String userIdx, Month month) throws IllegalArgumentException{
+        User user = userRepository.findByUserIdxAndDeleteFlagFalse(userIdx);
+        if(user == null){
+            throw new IllegalArgumentException();
+        }
+
+        List<Log> logs = logRepository.findAllByUserUserIdxOrderByEndTimeDesc(user.getUserIdx());
         Double treeAmount = 0.0;
         Integer logCnt = 0;
         Set<LocalDate> logDates = new HashSet<>();
@@ -112,23 +118,25 @@ public class LogService {
     }
 
     @Transactional(readOnly = true)
-    public List<LogListResponseDto> getLogs(String userIdx){
+    public List<LogListResponseDto> getLogLists(String userIdx, Month month){
         List<LogListResponseDto> logs = new ArrayList<>();
         for(Log log : logRepository.findAllByUserUserIdxOrderByEndTimeDesc(userIdx)){
-            LocalDate logDate = log.getStartTime().toLocalDate();
-            Integer dayOfWeek = logDate.getDayOfWeek().getValue();
-            Duration d = Duration.between(log.getStartTime(),log.getEndTime());
-            Long hours = d.toHours();
-            Long minutes = d.minusHours(hours).toMinutes();
+            if(log.getStartTime().getMonth() == month){
+                LocalDate logDate = log.getStartTime().toLocalDate();
+                Integer dayOfWeek = logDate.getDayOfWeek().getValue();
+                Duration d = Duration.between(log.getStartTime(),log.getEndTime());
+                Long hours = d.toHours();
+                Long minutes = d.minusHours(hours).toMinutes();
 
-            logs.add(LogListResponseDto.builder()
-                    .logIdx(log.getLogIdx())
-                    .logDate(logDate)
-                    .dayOfWeek(dayOfWeek)
-                    .hours(hours)
-                    .minutes(minutes)
-                    .carbon(log.getCarbon())
-                    .build());
+                logs.add(LogListResponseDto.builder()
+                        .logIdx(log.getLogIdx())
+                        .logDate(logDate)
+                        .dayOfWeek(dayOfWeek)
+                        .hours(hours)
+                        .minutes(minutes)
+                        .carbon(log.getCarbon())
+                        .build());
+            }
         }
         return logs;
     }
