@@ -65,12 +65,13 @@ public class UserService {
             throw new IllegalArgumentException();
         }
 
-        Image treeImg = treeRepository.findByUserUserIdxAndTreeCarbonLessThan(userIdx, TreeAmountStandard).getTreeImg();
+        Tree tree = treeRepository.findByUserUserIdxAndTreeCarbonLessThan(userIdx, TreeAmountStandard);
 
         return UserResponseDto.builder()
                 .userIdx(user.getUserIdx())
                 .userName(user.getUserName())
-                .treeImg(treeImg.getFilePath())
+                .treeName(tree.getTreeName())
+                .treeImg(tree.getTreeImg().getFilePath())
                 .totalCarbon(user.getTotalCarbon())
                 .build();
     }

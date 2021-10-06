@@ -10,6 +10,7 @@ public class UserResponseDto {
     private String userIdx;
     private String userName;
     private String treeImg;
+    private String treeName;
     private Double totalCarbon;
 
 }
