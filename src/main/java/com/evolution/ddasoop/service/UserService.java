@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class UserService {
@@ -20,8 +23,6 @@ public class UserService {
     private final ImageRepository imageRepository;
     private final BadgeImageRepository badgeImageRepository;
     private final BadgeRepository badgeRepository;
-
-    private final double TreeAmountStandard = 10.0;
 
     @Transactional
     public Long saveUser(UserSaveRequestDto requestDto) throws IllegalArgumentException{
@@ -61,18 +62,26 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserResponseDto getUser(String userIdx) throws IllegalArgumentException{
         User user = userRepository.findByUserIdxAndDeleteFlagFalse(userIdx);
+
         if(user == null){
             throw new IllegalArgumentException();
         }
 
-        Tree tree = treeRepository.findByUserUserIdxAndTreeCarbonLessThan(userIdx, TreeAmountStandard);
+        List<UserResponseDto.TreeListResponseDto> trees = new ArrayList<>();
+
+        for(Tree tree : treeRepository.findAllByUserUserIdx(user.getUserIdx())){
+            trees.add(UserResponseDto.TreeListResponseDto.builder()
+                    .treeIdx(tree.getTreeIdx())
+                    .treeImg(tree.getTreeImg().getFilePath())
+                    .treeName(tree.getTreeName())
+                    .treeCarbon(tree.getTreeCarbon())
+                    .build());
+        }
 
         return UserResponseDto.builder()
                 .userIdx(user.getUserIdx())
                 .userName(user.getUserName())
-                .treeName(tree.getTreeName())
-                .treeImg(tree.getTreeImg().getFilePath())
-                .totalCarbon(user.getTotalCarbon())
+                .trees(trees)
                 .build();
     }
 
