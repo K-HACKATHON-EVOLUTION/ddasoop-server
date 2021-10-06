@@ -12,10 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -26,24 +28,30 @@ public class LogService {
     private final ImageRepository imageRepository;
     private final BadgeRepository badgeRepository;
     private final BadgeImageRepository badgeImageRepository;
-    private static final double TreeAmountStandard = 10.0;
 
     @Transactional(readOnly = true)
-    public LogMonthResponseDto getMonthlyLog(String userIdx){
-        List<Log> logs = logRepository.findAllByUserUserIdxOrderByEndTimeDesc(userIdx);
+    public LogMonthResponseDto getMonthlyLog(String userIdx, Month month) throws IllegalArgumentException{
+        User user = userRepository.findByUserIdxAndDeleteFlagFalse(userIdx);
+        if(user == null){
+            throw new IllegalArgumentException();
+        }
+
+        List<Log> logs = logRepository.findAllByUserUserIdxOrderByEndTimeDesc(user.getUserIdx());
         Double treeAmount = 0.0;
+        Integer logCnt = 0;
         Set<LocalDate> logDates = new HashSet<>();
 
         for(Log log : logs){
-            treeAmount += log.getCarbon();
-            if(log.getStartTime().getMonth() == LocalDateTime.now().getMonth()){
+            if(log.getStartTime().getMonth() == month){
                 logDates.add(log.getStartTime().toLocalDate());
+                treeAmount += log.getCarbon();
+                logCnt++;
             }
         }
         treeAmount = Double.valueOf(Math.round(treeAmount*1000)/1000.0);
         return LogMonthResponseDto.builder()
                 .userIdx(userIdx)
-                .logCnt(logs.size())
+                .logCnt(logCnt)
                 .treeAmount(treeAmount)
                 .logDates(logDates)
                 .build();
@@ -70,7 +78,7 @@ public class LogService {
         Double carbon = log.calculateCarbon(requestDto.getDistance());
         user.updateTotalCarbon(carbon);
 
-        Tree tree = treeRepository.findByUserUserIdxAndTreeCarbonLessThan(userIdx,TreeAmountStandard);
+        Tree tree = treeRepository.findByUserUserIdxAndTreeCarbonLessThan(userIdx,Tree.MAX_TREE);
         Double remain = tree.updateTree(carbon);
         boolean win = false;
 
@@ -78,6 +86,7 @@ public class LogService {
             //현재 트리 완성
             Tree newTree = Tree.builder()
                     .treeCarbon(remain)
+                    .treeName("나무")
                     .user(user)
                     .build();
             newTree.updateGrowth(remain);
@@ -97,9 +106,17 @@ public class LogService {
                 win = true;
             }
         }
+        if(remain >= 0.0){
+            //기존 트리가 성장한 경우 이미지 교체
+            long index = tree.getGrowth().longValue();
 
-        tree.updateTreeImg(imageRepository.findImagesByImageIdx(tree.getGrowth().longValue()));
-        treeRepository.save(tree);
+            if(tree.getGrowth() == Tree.MAX_GROWTH){
+                //5단계 나무 이미지 선택
+                index = (long) (Math.random() * (imageRepository.count()-4) + 8);
+            }
+
+            tree.updateTreeImg(imageRepository.findImagesByImageIdx(index));
+        }
 
         if(win){
             return "success";
@@ -109,23 +126,25 @@ public class LogService {
     }
 
     @Transactional(readOnly = true)
-    public List<LogListResponseDto> getLogs(String userIdx){
+    public List<LogListResponseDto> getLogLists(String userIdx, Month month){
         List<LogListResponseDto> logs = new ArrayList<>();
         for(Log log : logRepository.findAllByUserUserIdxOrderByEndTimeDesc(userIdx)){
-            LocalDate logDate = log.getStartTime().toLocalDate();
-            Integer dayOfWeek = logDate.getDayOfWeek().getValue();
-            Duration d = Duration.between(log.getStartTime(),log.getEndTime());
-            Long hours = d.toHours();
-            Long minutes = d.minusHours(hours).toMinutes();
+            if(log.getStartTime().getMonth() == month){
+                LocalDate logDate = log.getStartTime().toLocalDate();
+                Integer dayOfWeek = logDate.getDayOfWeek().getValue();
+                Duration d = Duration.between(log.getStartTime(),log.getEndTime());
+                Long hours = d.toHours();
+                Long minutes = d.minusHours(hours).toMinutes();
 
-            logs.add(LogListResponseDto.builder()
-                    .logIdx(log.getLogIdx())
-                    .logDate(logDate)
-                    .dayOfWeek(dayOfWeek)
-                    .hours(hours)
-                    .minutes(minutes)
-                    .carbon(log.getCarbon())
-                    .build());
+                logs.add(LogListResponseDto.builder()
+                        .logIdx(log.getLogIdx())
+                        .logDate(logDate)
+                        .dayOfWeek(dayOfWeek)
+                        .hours(hours)
+                        .minutes(minutes)
+                        .carbon(log.getCarbon())
+                        .build());
+            }
         }
         return logs;
     }

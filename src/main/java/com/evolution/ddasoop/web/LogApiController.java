@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Month;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -17,9 +18,14 @@ import java.util.List;
 public class LogApiController {
     private final LogService logService;
 
-    @GetMapping("/api/users/{userIdx}/logs/monthly")
-    public LogMonthResponseDto getMonthlyLog(@PathVariable String userIdx){
-        return logService.getMonthlyLog(userIdx);
+    @GetMapping("/api/users/{userIdx}/logs")
+    public ResponseEntity<Object> getMonthlyLog(@PathVariable String userIdx, @RequestParam int month){
+        try{
+            return ResponseEntity.ok().body(logService.getMonthlyLog(userIdx, Month.of(month)));
+        }catch(Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail");
+        }
     }
 
     @PostMapping("/api/users/{userIdx}/logs")
@@ -32,9 +38,14 @@ public class LogApiController {
         }
     }
 
-    @GetMapping("/api/users/{userIdx}/logs")
-    public List<LogListResponseDto> getLogs(@PathVariable String userIdx){
-        return logService.getLogs(userIdx);
+    @GetMapping("/api/users/{userIdx}/logLists")
+    public ResponseEntity<Object> getLogLists(@PathVariable String userIdx, @RequestParam int month){
+        try{
+            return ResponseEntity.ok().body(logService.getLogLists(userIdx, Month.of(month)));
+        }catch(Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail");
+        }
     }
 
     @GetMapping("/api/users/{userIdx}/logs/{logIdx}")
