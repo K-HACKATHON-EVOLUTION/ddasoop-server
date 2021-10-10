@@ -47,8 +47,8 @@ public class ForestController {
     //5. 숲 생성하기
     @PostMapping("/forests/{user_idx}")
     public String makeForest(@PathVariable String user_idx,
-                             @RequestParam(required = false) ForestSaveDto forestSaveDto,
-                             @RequestParam MultipartFile photo) throws IOException {
+                             @RequestPart(value = "forestSaveDto",required = false) ForestSaveDto forestSaveDto,
+                             @RequestPart (value = "photo")MultipartFile photo) throws IOException {
         return forestService.createForest(user_idx, forestSaveDto, photo);
     }
 
