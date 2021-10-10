@@ -183,7 +183,7 @@ public class ForestService {
             newPhoto = s3Service.update(oldPhoto,uploadFile);
 
             if(newPhoto!=null){
-                forestImage.updatePath("https://"+s3Service.CLOUD_FRONT_DOMAIN_NAME+"/"+newPhoto);
+                forestImage.updatePath("http://"+s3Service.CLOUD_FRONT_DOMAIN_NAME+"/"+newPhoto);
                 s3Service.delete(oldPhoto);
             } else {
                 return "file type is not proper or is corrupted";
