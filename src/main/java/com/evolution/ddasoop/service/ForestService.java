@@ -97,10 +97,6 @@ public class ForestService {
 
     @Transactional
     public String createForest(String user_idx, ForestSaveDto forestSaveDto, MultipartFile photo) throws IOException {
-
-        User user = userRepository.findByUserIdxAndDeleteFlagFalse(user_idx);
-            //이미지 추가하기
-    public String createForest(String user_idx, ForestSaveDto forestSaveDto, MultipartFile photo){
         User user = userRepository.findByUserIdxAndDeleteFlagFalse(user_idx);
 
         if(user.getForest() == null){
@@ -115,6 +111,7 @@ public class ForestService {
             user.setForest(forest);
 
             ForestImage forestImage = s3Service.upload(photo,forest);
+            forestImageRepository.save(forestImage);
             return "숲이 생성되었습니다";
         }
         else return"이미 가입된 숲이 존재합니다!";
