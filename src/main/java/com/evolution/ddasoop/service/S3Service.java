@@ -77,7 +77,7 @@ public class S3Service {
             }
           
             SimpleDateFormat date = new SimpleDateFormat("yyyymmddHHmmss");
-            String fileName = FilenameUtils.getBaseName(photo.getOriginalFilename()) + "-" + date.format(new Date()) + "." + FilenameUtils.getExtension(photo.getOriginalFilename());
+            String fileName = FilenameUtils.getBaseName(photo.getOriginalFilename()) + "_" + date.format(new Date()) + "." + FilenameUtils.getExtension(photo.getOriginalFilename());
 
 
             s3Client.putObject(new PutObjectRequest(bucket, fileName, photo.getInputStream(), null)
@@ -111,7 +111,7 @@ public class S3Service {
         }
         if(isOk == 1) {
             SimpleDateFormat date = new SimpleDateFormat("yyyyMMddHHmmss");
-            String fileName = FilenameUtils.getBaseName(file.getOriginalFilename()) + "-" + date.format(new Date()) + "." + FilenameUtils.getExtension(file.getOriginalFilename());
+            String fileName = FilenameUtils.getBaseName(file.getOriginalFilename()) + "_" + date.format(new Date()) + "." + FilenameUtils.getExtension(file.getOriginalFilename());
 
             if ("".equals(currentFilePath) == false && currentFilePath != null) {
                 boolean isExistObject = s3Client.doesObjectExist(bucket, currentFilePath);

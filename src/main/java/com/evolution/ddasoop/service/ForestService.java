@@ -183,6 +183,7 @@ public class ForestService {
             newPhoto = s3Service.update(oldPhoto,uploadFile);
 
             if(newPhoto!=null){
+                forestImage.setOriginalFileName(newPhoto);
                 forestImage.updatePath("http://"+s3Service.CLOUD_FRONT_DOMAIN_NAME+"/"+newPhoto);
                 s3Service.delete(oldPhoto);
             } else {
@@ -191,7 +192,7 @@ public class ForestService {
 
         } catch (Exception e){
             System.out.println("file exception");
-            return "error occured during upload" + e.getMessage();
+            return "error occured during upload " + e.getMessage();
         }
         return "숲 사진이 변경되었습니다";
     }
