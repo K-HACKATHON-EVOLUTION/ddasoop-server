@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -95,6 +96,10 @@ public class ForestService {
     }
 
     @Transactional
+    public String createForest(String user_idx, ForestSaveDto forestSaveDto, MultipartFile photo) throws IOException {
+
+        User user = userRepository.findByUserIdxAndDeleteFlagFalse(user_idx);
+            //이미지 추가하기
     public String createForest(String user_idx, ForestSaveDto forestSaveDto, MultipartFile photo){
         User user = userRepository.findByUserIdxAndDeleteFlagFalse(user_idx);
 
@@ -103,17 +108,13 @@ public class ForestService {
                     .forestName(forestSaveDto.getForestName())
                     .leader(user_idx)
                     .forestIntro(forestSaveDto.getForestIntro())
-                    .forestImg(forestSaveDto.getForestImg())
                     .size(forestSaveDto.getSize())
                     .deleteFlag(Boolean.FALSE)
                     .build();
             forestRepository.save(forest);
             user.setForest(forest);
 
-            //이미지 추가하기
-
-
-
+            ForestImage forestImage = s3Service.upload(photo,forest);
             return "숲이 생성되었습니다";
         }
         else return"이미 가입된 숲이 존재합니다!";
@@ -159,7 +160,33 @@ public class ForestService {
             newPhoto = s3Service.update(oldPhoto,uploadFile);
 
             if(newPhoto!=null){
-                forest.updatePhotoUrl("http://"+s3Service.CLOUD_FRONT_DOMAIN_NAME+"/"+newPhoto);
+                forest.updatePhotoUrl("https://"+s3Service.CLOUD_FRONT_DOMAIN_NAME+"/"+newPhoto);
+                s3Service.delete(oldPhoto);
+            } else {
+                return "file type is not proper or is corrupted";
+            }
+
+        } catch (Exception e){
+            System.out.println("file exception");
+            return "error occured during upload" + e.getMessage();
+        }
+        return "숲 사진이 변경되었습니다";
+    }
+
+    @Transactional
+    public String updateForestImg(Long forest_idx, MultipartFile uploadFile){
+        String newPhoto;
+        Forest forest = forestRepository.findByForestIdxAndDeleteFlagFalse(forest_idx);
+        ForestImage forestImage = forestImageRepository.findForestImageByForest(forest);
+        if(forest == null){
+            return "숲이 존재하지 않습니다. forest_idx: " +forest_idx;
+        }
+        try{
+            String oldPhoto = forest.getForestImg();
+            newPhoto = s3Service.update(oldPhoto,uploadFile);
+
+            if(newPhoto!=null){
+                forestImage.updatePath("https://"+s3Service.CLOUD_FRONT_DOMAIN_NAME+"/"+newPhoto);
                 s3Service.delete(oldPhoto);
             } else {
                 return "file type is not proper or is corrupted";

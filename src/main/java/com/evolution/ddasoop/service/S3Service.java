@@ -75,8 +75,10 @@ public class S3Service {
                     return null;
                 }
             }
-            //SimpleDateFormat date = new SimpleDateFormat("yyyymmddHHmmss");
-            String fileName = FilenameUtils.getBaseName(photo.getOriginalFilename()) + "-" + Long.toString(System.nanoTime()) + "." + FilenameUtils.getExtension(photo.getOriginalFilename());
+          
+            SimpleDateFormat date = new SimpleDateFormat("yyyymmddHHmmss");
+            String fileName = FilenameUtils.getBaseName(photo.getOriginalFilename()) + "-" + date.format(new Date()) + "." + FilenameUtils.getExtension(photo.getOriginalFilename());
+
 
             s3Client.putObject(new PutObjectRequest(bucket, fileName, photo.getInputStream(), null)
                     .withCannedAcl(CannedAccessControlList.PublicRead));

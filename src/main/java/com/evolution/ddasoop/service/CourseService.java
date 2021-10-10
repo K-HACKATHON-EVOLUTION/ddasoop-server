@@ -69,7 +69,9 @@ public class CourseService {
     @Transactional
     public List<TopCourseDto> getTop3Course(){
         List<TopCourseDto> topCourseDtoList = new ArrayList<>();
+
         //이번 달에 추가된 좋아요 개수 기준 내림차순 정렬
+
         for(Course course : courseRepository.findAllByDeleteFlagIsFalse()){
             CourseImage courseImage = courseImageRepository.findCourseImageByCourse(course);
             Integer heart= heartRepository.countHeartByCourseAndDeleteFlagFalse(course);
@@ -81,8 +83,8 @@ public class CourseService {
                     .build());
         }
 
-
         topCourseDtoList.sort(Comparator.comparing(TopCourseDto::getCourse_heart).reversed());
+
 
 
         return topCourseDtoList;

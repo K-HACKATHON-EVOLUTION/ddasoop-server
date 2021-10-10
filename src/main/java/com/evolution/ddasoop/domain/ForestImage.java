@@ -36,4 +36,10 @@ public class ForestImage {
         this.filePath = filePath;
         this.fileSize = fileSize;
     }
+
+
+    public void updatePath(String url){
+        this.filePath = url;
+    }
+
 }

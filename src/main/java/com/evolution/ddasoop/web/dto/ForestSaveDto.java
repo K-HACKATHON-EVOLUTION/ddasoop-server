@@ -11,6 +11,5 @@ public class ForestSaveDto {
 
     private String forestName;
     private Integer size;
-    private String forestImg;
     private String forestIntro;
 }
