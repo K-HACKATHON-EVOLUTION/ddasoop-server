@@ -12,6 +12,8 @@ public class BadgeResponseDto {
     public BadgeResponseDto(Badge entity){
         this.badgeIdx = entity.getBadgeIdx();
         this.userIdx = entity.getUser().getUserIdx();
-        this.treeImg = entity.getTree().getTreeImg().getFilePath()+entity.getTree().getTreeImg().getOriginalFileName();
+
+        if(entity.getTree() != null)
+           this.treeImg = entity.getTree().getTreeImg().getFilePath();
     }
 }

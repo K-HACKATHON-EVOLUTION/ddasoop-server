@@ -5,6 +5,7 @@ import com.evolution.ddasoop.service.UserService;
 import com.evolution.ddasoop.web.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,13 +21,6 @@ public class ForestController {
     private final UserService userService;
 
     //1. Group List 페이지 숲 목록 불러오기
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    // **그룹 리스트 반환(탄소저감량순)**
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     @GetMapping("/forests")
     public List<ForestListResponseDto> getForestList(){
         return forestService.getAllForest();
@@ -34,12 +28,11 @@ public class ForestController {
 
     //2. Group List 페이지 MY 숲 가져오기 **내 그룹 반환(리스트 컨테이너 형태)**
     @GetMapping("/users/{user_idx}/forest")
-    public MyForestDto getMyForest(@PathVariable("user_idx") Long user_idx){
+    public MyForestDto getMyForest(@PathVariable("user_idx") String user_idx){
         return userService.getMyForest(user_idx);
     }
 
     //3.그룹 하나 가져오기
-    // total_carbon 수정 필요
     @GetMapping("/forest/{forest_idx}/user")
     public ForestMemberListDto ForestUserList(@PathVariable("forest_idx") Long forest_idx){
         return forestService.getForest(forest_idx);
@@ -53,31 +46,17 @@ public class ForestController {
 
     //5. 숲 생성하기
     @PostMapping("/forests/{user_idx}")
-<<<<<<< Updated upstream
-    public String makeForest(@PathVariable String user_idx, @RequestBody ForestSaveDto forestSaveDto){
-        return forestService.saveForest(user_idx, forestSaveDto);
-=======
     public String makeForest(@PathVariable String user_idx,
                              @RequestBody ForestSaveDto forestSaveDto,
                              @RequestBody MultipartFile photo) throws IOException {
         return forestService.createForest(user_idx, forestSaveDto, photo);
->>>>>>> Stashed changes
     }
 
     // 6.  그룹 사진 수정
-<<<<<<< Updated upstream
-    // 수정
-=======
-    //코드 수정
->>>>>>> Stashed changes
     @PatchMapping("/forests/{forest_idx}/photo")
-<<<<<<< Updated upstream
-    public void updateForestPhoto(){}
-=======
     public String updateForestPhoto(@PathVariable Long forest_idx, @RequestParam("uploadFile") MultipartFile uploadFile){
         return forestService.updateForestImg(forest_idx,uploadFile);
     }
->>>>>>> Stashed changes
 
 
     //7.  그룹 이름 편집
@@ -102,7 +81,7 @@ public class ForestController {
 
     //10.  그룹원 삭제(그룹원의 그룹 탈퇴)
     @DeleteMapping("/forests/{forest_idx}/users/{user_idx}")
-    public String deleteForestMember(@PathVariable("forest_idx") long forest_idx, @PathVariable("user_idx") long user_idx){
+    public String deleteForestMember(@PathVariable("forest_idx") long forest_idx, @PathVariable("user_idx") String user_idx){
         return forestService.deleteForestMember(forest_idx, user_idx);
     }
 

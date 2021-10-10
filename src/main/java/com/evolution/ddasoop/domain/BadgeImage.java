@@ -9,16 +9,11 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name="forest_image")
-public class ForestImage {
-
+@Table(name="badge_image")
+public class BadgeImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ImageIdx;
-
-    @ManyToOne(targetEntity = Forest.class, fetch = FetchType.LAZY)
-    @JoinColumn(name="forest_idx")
-    private Forest forest;
+    private Long badgeImgIdx;
 
     @Column
     private String originalFileName;
@@ -30,16 +25,9 @@ public class ForestImage {
     private Long fileSize;
 
     @Builder
-    public ForestImage(String originalFileName, Forest forest, String filePath, Long fileSize) {
-        this.forest = forest;
+    public BadgeImage(String originalFileName, String filePath, Long fileSize){
         this.originalFileName = originalFileName;
         this.filePath = filePath;
         this.fileSize = fileSize;
     }
-
-
-    public void updatePath(String url){
-        this.filePath = url;
-    }
-
 }

@@ -3,7 +3,6 @@ package com.evolution.ddasoop.service;
 
 import com.evolution.ddasoop.web.dto.MyForestDto;
 import com.evolution.ddasoop.domain.*;
-import com.evolution.ddasoop.web.dto.UserMainResponseDto;
 import com.evolution.ddasoop.web.dto.UserResponseDto;
 import com.evolution.ddasoop.web.dto.UserSaveRequestDto;
 import com.evolution.ddasoop.web.dto.UserUpdateRequestDto;
@@ -11,28 +10,22 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class UserService {
     private final UserRepository userRepository;
     private final TreeRepository treeRepository;
     private final ForestRepository forestRepository;
+    private final ForestImageRepository forestImageRepository;
     private final ImageRepository imageRepository;
-    private final double TreeAmountStandard = 10.0;
-
-
-    @Transactional(readOnly = true)
-    public UserMainResponseDto getMainInfo(String userIdx) throws IllegalArgumentException{
-        User user = userRepository.findByUserIdxAndDeleteFlagFalse(userIdx);
-        if(user == null){
-            throw new IllegalArgumentException();
-        }
-
-        return new UserMainResponseDto(user);
-    }
+    private final BadgeImageRepository badgeImageRepository;
+    private final BadgeRepository badgeRepository;
 
     @Transactional
-    public String saveUser(UserSaveRequestDto requestDto) throws IllegalArgumentException{
+    public Long saveUser(UserSaveRequestDto requestDto) throws IllegalArgumentException{
         User user = userRepository.findByUserIdxAndDeleteFlagFalse(requestDto.getUserIdx());
         if(user != null){
             throw new IllegalArgumentException();
@@ -46,6 +39,16 @@ public class UserService {
                 .build();
         userRepository.save(user);
 
+        long count = badgeImageRepository.count();
+        long index = (long) (Math.random() * count + 1);
+
+        Badge badge = Badge.builder()
+                .user(user)
+                .tree(null)
+                .badgeImg(badgeImageRepository.findBadgeImageByBadgeImgIdx(index))
+                .build();
+        badgeRepository.save(badge);
+
         treeRepository.save(Tree.builder()
                 .user(user)
                 .treeCarbon(0.0)
@@ -53,22 +56,32 @@ public class UserService {
                 .treeImg(imageRepository.findImagesByImageIdx(Long.valueOf(1)))
                 .build());
 
-        return "success";
+        return badge.getBadgeIdx();
     }
 
     @Transactional(readOnly = true)
     public UserResponseDto getUser(String userIdx) throws IllegalArgumentException{
         User user = userRepository.findByUserIdxAndDeleteFlagFalse(userIdx);
+
         if(user == null){
             throw new IllegalArgumentException();
         }
 
-        Image treeImg = treeRepository.findByUserUserIdxAndTreeCarbonLessThan(userIdx, TreeAmountStandard).getTreeImg();
+        List<UserResponseDto.TreeListResponseDto> trees = new ArrayList<>();
+
+        for(Tree tree : treeRepository.findAllByUserUserIdx(user.getUserIdx())){
+            trees.add(UserResponseDto.TreeListResponseDto.builder()
+                    .treeIdx(tree.getTreeIdx())
+                    .treeImg(tree.getTreeImg().getFilePath())
+                    .treeName(tree.getTreeName())
+                    .treeCarbon(tree.getTreeCarbon())
+                    .build());
+        }
 
         return UserResponseDto.builder()
                 .userIdx(user.getUserIdx())
                 .userName(user.getUserName())
-                .treeImg(treeImg.getFilePath()+treeImg.getOriginalFileName())
+                .trees(trees)
                 .build();
     }
 
@@ -117,12 +130,13 @@ public class UserService {
     }
 
     @Transactional
-    public MyForestDto getMyForest(Long user_idx) {
-        Forest forest = userRepository.findById(user_idx).get().getForest();
+    public MyForestDto getMyForest(String user_idx) {
+        Forest forest = userRepository.findByUserIdxAndDeleteFlagFalse(user_idx).getForest();
+        ForestImage forestImage = forestImageRepository.findForestImageByForest(forest);
         MyForestDto myForestDto = MyForestDto.builder()
                 .forestName(forest.getForestName())
                 .forestIdx(forest.getForestIdx())
-                .forestImg(forest.getForestImg())
+                .forestImg(forestImage.getFilePath())
                 .build();
         return myForestDto;
     }

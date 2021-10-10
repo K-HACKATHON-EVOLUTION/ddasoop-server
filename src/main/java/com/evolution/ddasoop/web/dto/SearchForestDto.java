@@ -1,7 +1,6 @@
 package com.evolution.ddasoop.web.dto;
 
-import com.evolution.ddasoop.domain.Forest;
-import com.evolution.ddasoop.domain.User;
+import com.evolution.ddasoop.domain.*;
 import lombok.Getter;
 
 @Getter

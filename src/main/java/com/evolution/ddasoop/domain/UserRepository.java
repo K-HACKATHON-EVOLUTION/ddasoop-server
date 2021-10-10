@@ -8,9 +8,10 @@ import java.lang.reflect.Member;
 import java.util.List;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, String> {
     User findByUserIdxAndDeleteFlagFalse(String userIdx);
     List<User> findAllByForest(Forest forest);
-    //List<User> findAllByForestOrderByTotalCarbon(Forest forest);
+    List<User> findAllByDeleteFlagIsFalseAndForest(Forest forest);
     List<User> findAllByForestOrderByTotalCarbon(Forest forest);
+
 }

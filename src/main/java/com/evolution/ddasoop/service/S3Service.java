@@ -7,16 +7,26 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import lombok.NoArgsConstructor;
+import com.evolution.ddasoop.domain.Forest;
+import com.evolution.ddasoop.domain.ForestImage;
+import com.evolution.ddasoop.domain.ForestImageRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-@NoArgsConstructor
-@Service
+@Component
+@Slf4j
+@RequiredArgsConstructor
 public class S3Service {
     private AmazonS3 s3Client;
     public static final String CLOUD_FRONT_DOMAIN_NAME = "d117ehama2apgt.cloudfront.net";
@@ -44,10 +54,6 @@ public class S3Service {
     }
 
 
-<<<<<<< Updated upstream
-    public String upload(MultipartFile file) throws IOException {
-        String fileName = file.getOriginalFilename();
-=======
     public ForestImage upload(MultipartFile photo, Forest forest) throws IOException {
         if (photo != null) {
             String contentType = photo.getContentType();
@@ -69,8 +75,10 @@ public class S3Service {
                     return null;
                 }
             }
+          
             SimpleDateFormat date = new SimpleDateFormat("yyyymmddHHmmss");
             String fileName = FilenameUtils.getBaseName(photo.getOriginalFilename()) + "-" + date.format(new Date()) + "." + FilenameUtils.getExtension(photo.getOriginalFilename());
+
 
             s3Client.putObject(new PutObjectRequest(bucket, fileName, photo.getInputStream(), null)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
@@ -112,12 +120,27 @@ public class S3Service {
                     s3Client.deleteObject(bucket, currentFilePath);
                 }
             }
->>>>>>> Stashed changes
 
-        s3Client.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(), null)
-                .withCannedAcl(CannedAccessControlList.PublicRead));
+            s3Client.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(), null)
+                    .withCannedAcl(CannedAccessControlList.PublicRead));
 
-        return fileName;
+            return fileName;
+        } else {
+            return null;
+        }
+    }
+
+    public String delete(String currentFilePath) {
+        int idx = currentFilePath.lastIndexOf("/");
+        String fileName = currentFilePath.substring(idx+1);
+        try {
+            s3Client.deleteObject(bucket, fileName);
+            return "deleted";
+        }
+        catch(Exception e) {
+            return "error occured" + e.getMessage();
+        }
 
     }
+
 }

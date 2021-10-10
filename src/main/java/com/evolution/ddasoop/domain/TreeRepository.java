@@ -8,4 +8,5 @@ import java.util.List;
 @Repository
 public interface TreeRepository extends JpaRepository<Tree, Long> {
     Tree findByUserUserIdxAndTreeCarbonLessThan(String userIdx, Double treeCarbon);
+    List<Tree> findAllByUserUserIdx(String userIdx);
 }
