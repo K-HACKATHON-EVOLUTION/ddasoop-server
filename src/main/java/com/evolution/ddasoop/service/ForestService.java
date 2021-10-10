@@ -104,7 +104,7 @@ public class ForestService {
                     .forestName(forestSaveDto.getForestName())
                     .leader(user_idx)
                     .forestIntro(forestSaveDto.getForestIntro())
-                    .size(forestSaveDto.getSize())
+                    .size(10)
                     .deleteFlag(Boolean.FALSE)
                     .build();
             forestRepository.save(forest);
