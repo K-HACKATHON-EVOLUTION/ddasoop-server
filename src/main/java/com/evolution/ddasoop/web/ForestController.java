@@ -6,6 +6,7 @@ import com.evolution.ddasoop.web.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +21,10 @@ public class ForestController {
 
     //1. Group List 페이지 숲 목록 불러오기
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     // **그룹 리스트 반환(탄소저감량순)**
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     @GetMapping("/forests")
@@ -48,10 +52,16 @@ public class ForestController {
     }
 
     //5. 숲 생성하기
-    //이미지 수정
     @PostMapping("/forests/{user_idx}")
+<<<<<<< Updated upstream
     public String makeForest(@PathVariable String user_idx, @RequestBody ForestSaveDto forestSaveDto){
         return forestService.saveForest(user_idx, forestSaveDto);
+=======
+    public String makeForest(@PathVariable String user_idx,
+                             @RequestBody ForestSaveDto forestSaveDto,
+                             @RequestBody MultipartFile photo) throws IOException {
+        return forestService.createForest(user_idx, forestSaveDto, photo);
+>>>>>>> Stashed changes
     }
 
     // 6.  그룹 사진 수정
@@ -61,7 +71,13 @@ public class ForestController {
     //코드 수정
 >>>>>>> Stashed changes
     @PatchMapping("/forests/{forest_idx}/photo")
+<<<<<<< Updated upstream
     public void updateForestPhoto(){}
+=======
+    public String updateForestPhoto(@PathVariable Long forest_idx, @RequestParam("uploadFile") MultipartFile uploadFile){
+        return forestService.updateForestImg(forest_idx,uploadFile);
+    }
+>>>>>>> Stashed changes
 
 
     //7.  그룹 이름 편집

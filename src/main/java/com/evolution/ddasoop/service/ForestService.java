@@ -82,7 +82,11 @@ public class ForestService {
     }
 
     @Transactional
+<<<<<<< Updated upstream
     public String saveForest(String user_idx, ForestSaveDto forestSaveDto){
+=======
+    public String createForest(String user_idx, ForestSaveDto forestSaveDto, MultipartFile photo) throws IOException {
+>>>>>>> Stashed changes
         User user = userRepository.findByUserIdxAndDeleteFlagFalse(user_idx);
 <<<<<<< Updated upstream
 =======
@@ -100,6 +104,7 @@ public class ForestService {
             forestRepository.save(forest);
             user.setForest(forest);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
 
             try{
@@ -110,6 +115,11 @@ public class ForestService {
             }
 
 
+=======
+
+            //이미지 추가하기
+            ForestImage forestImage = s3Service.upload(photo,forest);
+>>>>>>> Stashed changes
 
 >>>>>>> Stashed changes
             return "숲이 생성되었습니다";
@@ -143,4 +153,58 @@ public class ForestService {
 
         return forestMemberListDto;
     }
+<<<<<<< Updated upstream
+=======
+
+    @Transactional
+    public String updateForestPhoto(Long forest_idx, MultipartFile uploadFile){
+        String newPhoto;
+        Forest forest = forestRepository.findByForestIdxAndDeleteFlagFalse(forest_idx);
+        if(forest == null){
+            return "숲이 존재하지 않습니다. forest_idx: " +forest_idx;
+        }
+        try{
+            String oldPhoto = forest.getForestImg();
+            newPhoto = s3Service.update(oldPhoto,uploadFile);
+
+            if(newPhoto!=null){
+                forest.updatePhotoUrl("https://"+s3Service.CLOUD_FRONT_DOMAIN_NAME+"/"+newPhoto);
+                s3Service.delete(oldPhoto);
+            } else {
+                return "file type is not proper or is corrupted";
+            }
+
+        } catch (Exception e){
+            System.out.println("file exception");
+            return "error occured during upload" + e.getMessage();
+        }
+        return "숲 사진이 변경되었습니다";
+    }
+
+    @Transactional
+    public String updateForestImg(Long forest_idx, MultipartFile uploadFile){
+        String newPhoto;
+        Forest forest = forestRepository.findByForestIdxAndDeleteFlagFalse(forest_idx);
+        ForestImage forestImage = forestImageRepository.findForestImageByForest(forest);
+        if(forest == null){
+            return "숲이 존재하지 않습니다. forest_idx: " +forest_idx;
+        }
+        try{
+            String oldPhoto = forest.getForestImg();
+            newPhoto = s3Service.update(oldPhoto,uploadFile);
+
+            if(newPhoto!=null){
+                forestImage.updatePath("https://"+s3Service.CLOUD_FRONT_DOMAIN_NAME+"/"+newPhoto);
+                s3Service.delete(oldPhoto);
+            } else {
+                return "file type is not proper or is corrupted";
+            }
+
+        } catch (Exception e){
+            System.out.println("file exception");
+            return "error occured during upload" + e.getMessage();
+        }
+        return "숲 사진이 변경되었습니다";
+    }
+>>>>>>> Stashed changes
 }
