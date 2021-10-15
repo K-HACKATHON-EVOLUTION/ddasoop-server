@@ -51,6 +51,7 @@ public class UserService {
 
         treeRepository.save(Tree.builder()
                 .user(user)
+                .treeName("나무")
                 .treeCarbon(0.0)
                 .growth(1)
                 .treeImg(imageRepository.findImagesByImageIdx(Long.valueOf(1)))
