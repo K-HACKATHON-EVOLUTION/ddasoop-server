@@ -3,10 +3,12 @@ package com.evolution.ddasoop.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @Entity
 @Table(name="forest_image")
@@ -36,4 +38,10 @@ public class ForestImage {
         this.filePath = filePath;
         this.fileSize = fileSize;
     }
+
+
+    public void updatePath(String url){
+        this.filePath = url;
+    }
+
 }

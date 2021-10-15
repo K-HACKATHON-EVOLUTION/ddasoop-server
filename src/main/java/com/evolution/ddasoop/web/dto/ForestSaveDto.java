@@ -11,6 +11,11 @@ public class ForestSaveDto {
 
     private String forestName;
     private Integer size;
-    private String forestImg;
     private String forestIntro;
+
+    public ForestSaveDto(String forestName, Integer size, String forestIntro) {
+        this.forestName = forestName;
+        this.size = size;
+        this.forestIntro = forestIntro;
+    }
 }

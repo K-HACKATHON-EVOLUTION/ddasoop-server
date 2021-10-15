@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +21,6 @@ public class ForestController {
     private final UserService userService;
 
     //1. Group List 페이지 숲 목록 불러오기
-    //탄소량 추가
     @GetMapping("/forests")
     public List<ForestListResponseDto> getForestList(){
         return forestService.getAllForest();
@@ -45,18 +45,17 @@ public class ForestController {
     }
 
     //5. 숲 생성하기
-    //이미지 수정
     @PostMapping("/forests/{user_idx}")
     public String makeForest(@PathVariable String user_idx,
-                             @RequestBody ForestSaveDto forestSaveDto,
-                             @RequestBody MultipartFile photo){
+                             @RequestPart(value = "forestSaveDto",required = false) ForestSaveDto forestSaveDto,
+                             @RequestPart (value = "photo")MultipartFile photo) throws IOException {
         return forestService.createForest(user_idx, forestSaveDto, photo);
     }
 
     // 6.  그룹 사진 수정
     @PatchMapping("/forests/{forest_idx}/photo")
     public String updateForestPhoto(@PathVariable Long forest_idx, @RequestParam("uploadFile") MultipartFile uploadFile){
-        return forestService.updateForestPhoto(forest_idx,uploadFile);
+        return forestService.updateForestImg(forest_idx,uploadFile);
     }
 
 
