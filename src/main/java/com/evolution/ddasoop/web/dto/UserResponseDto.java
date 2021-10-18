@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.util.List;
+import java.util.Optional;
 
 @Getter
 @Builder
@@ -12,6 +13,7 @@ public class UserResponseDto {
     private String userIdx;
     private String userName;
     private List<TreeListResponseDto> trees;
+    private Optional<Long> forest;
 
     @Getter
     @Builder

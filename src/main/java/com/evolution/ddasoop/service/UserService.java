@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -79,10 +80,13 @@ public class UserService {
                     .build());
         }
 
+        Optional<Long> forest = Optional.ofNullable(user.getForest()!=null?user.getForest().getForestIdx():null);
+
         return UserResponseDto.builder()
                 .userIdx(user.getUserIdx())
                 .userName(user.getUserName())
                 .trees(trees)
+                .forest(forest)
                 .build();
     }
 
