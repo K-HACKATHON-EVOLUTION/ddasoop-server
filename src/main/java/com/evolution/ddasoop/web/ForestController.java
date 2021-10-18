@@ -38,8 +38,8 @@ public class ForestController {
 
     //4. 숲 검색하기 그룹 검색(특정 텍스트값 그룹 이름에 포함하고 있는 그룹을 리스트로 반환)
     @GetMapping("/forest/search")
-    public List<SearchForestDto> searchForest(@RequestParam(value="forest_name", required = false, defaultValue = "") String forestName){
-        return forestService.searchForest(forestName);
+    public List<ForestListResponseDto> searchForest(@RequestParam(value="forest_name", required = false, defaultValue = "") String forestName){
+        return forestService.search(forestName);
     }
 
     //5. 숲 생성하기

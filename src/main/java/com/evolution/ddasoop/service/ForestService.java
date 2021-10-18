@@ -70,10 +70,10 @@ public class ForestService {
 
         return forestListResponseDto;
     }
-
+    
     @Transactional
-    public List<SearchForestDto> searchForest(String forest_name){
-        List<SearchForestDto> searchForestDtos = new ArrayList<>();
+    public List<ForestListResponseDto> search(String forest_name){
+        List<ForestListResponseDto> forestListResponseDtos = new ArrayList<>();
         for(Forest forest: forestRepository.findByForestNameContaining(forest_name)){
 
             ForestImage forestImage = forestImageRepository.findForestImageByForest(forest);
@@ -82,15 +82,18 @@ public class ForestService {
             for(User user: userRepository.findAllByDeleteFlagIsFalseAndForest(forest)){
                 total_carbon += user.getTotalCarbon();
             }
-
-            searchForestDtos.add(SearchForestDto.builder()
-                    .forest_img(forestImage.getFilePath())
-                    .forest_carbon(total_carbon)
-                    .forest_name(forest.getForestName())
+            forestListResponseDtos.add(ForestListResponseDto.builder()
+                    .forestIdx(forest.getForestIdx())
+                    .leader(forest.getLeader())
+                    .forestName(forest.getForestName())
+                    .forestImg(forestImage.getFilePath())
                     .size(forest.getSize())
+                    .deleteFlag(forest.getDeleteFlag())
+                    .carbon(total_carbon)
                     .build());
         }
-        return searchForestDtos;
+        return forestListResponseDtos;
+
     }
 
     @Transactional
