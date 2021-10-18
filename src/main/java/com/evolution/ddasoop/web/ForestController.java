@@ -1,7 +1,6 @@
 package com.evolution.ddasoop.web;
 
 import com.evolution.ddasoop.service.ForestService;
-import com.evolution.ddasoop.service.UserService;
 import com.evolution.ddasoop.web.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,6 @@ import java.util.Map;
 public class ForestController {
 
     private final ForestService forestService;
-    private final UserService userService;
 
     //1. Group List 페이지 숲 목록 불러오기
     @GetMapping("/forests")
@@ -28,20 +26,20 @@ public class ForestController {
 
     //2. Group List 페이지 MY 숲 가져오기 **내 그룹 반환(리스트 컨테이너 형태)**
     @GetMapping("/users/{user_idx}/forest")
-    public MyForestDto getMyForest(@PathVariable("user_idx") String user_idx){
-        return userService.getMyForest(user_idx);
+    public ForestListResponseDto getMyForest(@PathVariable("user_idx") String user_idx){
+        return forestService.getMyForest(user_idx);
     }
 
     //3.그룹 하나 가져오기
-    @GetMapping("/forest/{forest_idx}/user")
-    public ForestMemberListDto ForestUserList(@PathVariable("forest_idx") Long forest_idx){
-        return forestService.getForest(forest_idx);
+    @GetMapping("/forest/{forest_idx}/{user_idx}/user")
+    public ForestMemberListDto ForestUserList(@PathVariable("forest_idx") Long forest_idx,@PathVariable("user_idx") String user_idx){
+        return forestService.getForest(forest_idx, user_idx);
     }
 
     //4. 숲 검색하기 그룹 검색(특정 텍스트값 그룹 이름에 포함하고 있는 그룹을 리스트로 반환)
     @GetMapping("/forest/search")
     public List<SearchForestDto> searchForest(@RequestParam(value="forest_name", required = false, defaultValue = "") String forestName){
-        return forestService.searchForests(forestName);
+        return forestService.searchForest(forestName);
     }
 
     //5. 숲 생성하기

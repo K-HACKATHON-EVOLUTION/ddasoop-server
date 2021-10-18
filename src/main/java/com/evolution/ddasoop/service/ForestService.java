@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -21,12 +20,11 @@ public class ForestService {
     private final UserRepository userRepository;
     private final S3Service s3Service;
     private final ForestImageRepository forestImageRepository;
+    private final TreeRepository treeRepository;
 
     @Transactional
     public List<ForestListResponseDto> getAllForest(){
      List<ForestListResponseDto> forests = new ArrayList<>();
-     List<User> users = new ArrayList<>();
-
      for (Forest forest: forestRepository.findAllByDeleteFlagFalseOrderByForestName()){
          double forest_carbon=0;
          for(User user: userRepository.findAllByDeleteFlagIsFalseAndForest(forest)){
@@ -52,10 +50,47 @@ public class ForestService {
     }
 
     @Transactional
-    public List<SearchForestDto> searchForests(String forestName){
-        return forestRepository.findByForestNameContaining(forestName).stream()
-                .map(SearchForestDto::new)
-                .collect(Collectors.toList());
+    public ForestListResponseDto getMyForest(String user_idx){
+        Forest forest = userRepository.findByUserIdxAndDeleteFlagFalse(user_idx).getForest();
+        ForestImage forestImage = forestImageRepository.findForestImageByForest(forest);
+        double forest_carbon=0;
+        for(User user: userRepository.findAllByDeleteFlagIsFalseAndForest(forest)){
+            forest_carbon += user.getTotalCarbon();
+        }
+
+        ForestListResponseDto forestListResponseDto = ForestListResponseDto.builder()
+                .forestIdx(forest.getForestIdx())
+                .leader(forest.getLeader())
+                .forestName(forest.getForestName())
+                .forestImg(forestImage.getFilePath())
+                .size(forest.getSize())
+                .deleteFlag(forest.getDeleteFlag())
+                .carbon(forest_carbon)
+                .build();
+
+        return forestListResponseDto;
+    }
+
+    @Transactional
+    public List<SearchForestDto> searchForest(String forest_name){
+        List<SearchForestDto> searchForestDtos = new ArrayList<>();
+        for(Forest forest: forestRepository.findByForestNameContaining(forest_name)){
+
+            ForestImage forestImage = forestImageRepository.findForestImageByForest(forest);
+
+            double total_carbon=0;
+            for(User user: userRepository.findAllByDeleteFlagIsFalseAndForest(forest)){
+                total_carbon += user.getTotalCarbon();
+            }
+
+            searchForestDtos.add(SearchForestDto.builder()
+                    .forest_img(forestImage.getFilePath())
+                    .forest_carbon(total_carbon)
+                    .forest_name(forest.getForestName())
+                    .size(forest.getSize())
+                    .build());
+        }
+        return searchForestDtos;
     }
 
     @Transactional
@@ -116,16 +151,18 @@ public class ForestService {
     }
 
     @Transactional
-    public ForestMemberListDto getForest(Long forest_idx){
+    public ForestMemberListDto getForest(Long forest_idx, String user_idx){
         Forest forest = forestRepository.findById(forest_idx).get();
         Double trees = 0.0;
 
         List<MemberListDto> memberList = new ArrayList<>();
         for(User user: userRepository.findAllByForestOrderByTotalCarbon(forest)){
+            Tree tree = treeRepository.findTreeByUserAndGrowthLessThan(user, 5);
             memberList.add(MemberListDto.builder()
                             .user_name(user.getUserName())
                             .user_carbon(user.getTotalCarbon())
                             .user_idx(user.getUserIdx())
+                            .user_treeImg(tree.getTreeImg().getFilePath())
                     .build());
         }
 
@@ -134,12 +171,32 @@ public class ForestService {
             trees = trees + memberList.get(i).getUser_carbon();
         }
 
+        int inList =0, own =0;
+        String Leader = forest.getLeader();
+
+        for(MemberListDto memberListDto:memberList){
+            if(memberListDto.getUser_idx().equals(user_idx)){
+                inList =1;
+                break;
+            }
+        }
+
+        if(Leader.equals(user_idx)==true){
+            own = 0;
+        }else if(Leader.equals(user_idx)==false&&inList==1) {
+            own =1;
+        }else if(Leader.equals(user_idx)==false&&inList==0)
+            own =2;
+        else own = 0;
+
         ForestMemberListDto forestMemberListDto = ForestMemberListDto.builder()
                 .member(memberList)
                 .leader(forest.getLeader())
                 .total_trees(trees)
+                .own(own)
                 .build();
 
+        memberList.sort(Comparator.comparing(MemberListDto::getUser_carbon).reversed());
         return forestMemberListDto;
     }
 
