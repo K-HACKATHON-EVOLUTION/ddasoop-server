@@ -6,8 +6,11 @@ import com.evolution.ddasoop.service.CourseService;
 import com.evolution.ddasoop.web.dto.CourseDto;
 import com.evolution.ddasoop.web.dto.TopCourseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Month;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -40,6 +43,16 @@ public class CourseApiController {
     @GetMapping("/course/{course_idx}")
     public CourseDto getaCourse(@PathVariable("course_idx") Long course_idx){
         return courseService.getAcourse(course_idx);
+    }
+
+    @GetMapping("/users/{userIdx}/courses/heart")
+    public ResponseEntity<Object> getHeartedCourse(@PathVariable String userIdx){
+        try{
+            return ResponseEntity.ok().body(courseService.getHeartedCourse(userIdx));
+        }catch(Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail");
+        }
     }
 
 }

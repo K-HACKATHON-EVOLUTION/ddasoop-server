@@ -17,6 +17,7 @@ public class CourseService {
     private final CourseRepository courseRepository;
     private final CourseImageRepository courseImageRepository;
     private final HeartRepository heartRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public CourseDto getAcourse(Long course_idx){
@@ -88,6 +89,30 @@ public class CourseService {
 
 
         return topCourseDtoList;
+    }
+
+    @Transactional(readOnly = true)
+    public List<TopCourseDto> getHeartedCourse(String userIdx){
+        User user = userRepository.findByUserIdxAndDeleteFlagFalse(userIdx);
+        if(user == null)
+            throw new IllegalArgumentException();
+
+        List<TopCourseDto> heartCourseList = new ArrayList<>();
+
+        for(Heart heart : heartRepository.findAllByUserUserIdxAndDeleteFlagFalse(userIdx)){
+            Course heartCourse = heart.getCourse();
+            CourseImage courseImage = courseImageRepository.findCourseImageByCourse(heartCourse);
+            heartCourseList.add(TopCourseDto.builder()
+                    .course_heart(heartRepository.countHeartByCourseAndDeleteFlagFalse(heartCourse))
+                    .course_intro(heartCourse.getCourseIntro())
+                    .course_name(heartCourse.getCourseName())
+                    .course_img(courseImage.getFilePath())
+                    .build());
+        }
+
+        Collections.reverse(heartCourseList);
+
+        return heartCourseList;
     }
 
 }
