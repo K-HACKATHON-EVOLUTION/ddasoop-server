@@ -70,7 +70,7 @@ public class ForestService {
 
         return forestListResponseDto;
     }
-    
+
     @Transactional
     public List<ForestListResponseDto> search(String forest_name){
         List<ForestListResponseDto> forestListResponseDtos = new ArrayList<>();
@@ -197,9 +197,10 @@ public class ForestService {
                 .leader(forest.getLeader())
                 .total_trees(trees)
                 .own(own)
+                .forest_intro(forest.getForestIntro())
                 .build();
 
-        memberList.sort(Comparator.comparing(MemberListDto::getUser_carbon).reversed());
+        memberList.sort(Comparator.comparing(MemberListDto::getUser_carbon));
         return forestMemberListDto;
     }
 

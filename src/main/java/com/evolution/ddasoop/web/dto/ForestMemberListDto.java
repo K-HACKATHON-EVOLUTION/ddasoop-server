@@ -15,5 +15,6 @@ public class ForestMemberListDto {
     private String leader;
     private double total_trees;
     private int own;
+    private String forest_intro;
 
 }
