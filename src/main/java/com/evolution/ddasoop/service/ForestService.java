@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -133,24 +132,31 @@ public class ForestService {
         return "숲이 삭제되었습니다.";
     }
 
+
     @Transactional
-    public String createForest(String user_idx, ForestSaveDto forestSaveDto, MultipartFile photo) throws IOException {
-        User user = userRepository.findByUserIdxAndDeleteFlagFalse(user_idx);
-        if(user.getForest() == null){
+    public String create(String user_idx, ForestSaveDto forestSaveDto,MultipartFile photo) throws Exception{
+            User user = userRepository.findByUserIdxAndDeleteFlagFalse(user_idx);
+            if(user.getForest()!=null){
+            throw new Exception("이미 유저에게 숲이 존재합니다!");
+            }
             Forest forest = Forest.builder()
+                    .forestImg(null)
+                    .deleteFlag(false)
+                    .size(10)
+                    .forestIntro(forestSaveDto.getForestIntro())
                     .forestName(forestSaveDto.getForestName())
                     .leader(user_idx)
-                    .forestIntro(forestSaveDto.getForestIntro())
-                    .size(10)
-                    .deleteFlag(Boolean.FALSE)
                     .build();
+
             forestRepository.save(forest);
+
             user.setForest(forest);
+
             ForestImage forestImage = s3Service.upload(photo,forest);
-            forestImageRepository.save(forestImage);
+            if(!forestImage.getFilePath().isEmpty()){
+                forestImageRepository.save(forestImage);
+            }
             return "숲이 생성되었습니다";
-        }
-        else return"이미 가입된 숲이 존재합니다!";
     }
 
     @Transactional

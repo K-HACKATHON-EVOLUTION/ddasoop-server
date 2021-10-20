@@ -2,6 +2,7 @@ package com.evolution.ddasoop.web;
 
 import com.evolution.ddasoop.service.ForestService;
 import com.evolution.ddasoop.web.dto.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,12 +44,28 @@ public class ForestController {
     }
 
     //5. 숲 생성하기
-    @PostMapping("/forests/{user_idx}")
+    /*@PostMapping("/forests/{user_idx}")
     public String makeForest(@PathVariable String user_idx,
                              @RequestPart(value = "forestSaveDto",required = false) ForestSaveDto forestSaveDto,
                              @RequestPart (value = "photo")MultipartFile photo) throws IOException {
         return forestService.createForest(user_idx, forestSaveDto, photo);
+    }*/
+
+    //숲 생성하기 다시
+    @PostMapping("/forests/{user_idx}")
+    public String makeForest(@PathVariable String user_idx,
+                             @RequestParam(value = "photo",required = false) MultipartFile photo,
+                             @RequestParam(value = "forestSaveDto") String forestSaveDto) throws Exception {
+        ForestSaveDto forestDto = new ObjectMapper().readValue(forestSaveDto,ForestSaveDto.class);
+        return forestService.create(user_idx, forestDto, photo);
     }
+
+    //5. 숲 생성하기-json
+   /*@PostMapping("/forests/{user_idx}")
+    public String makeForest(@PathVariable String user_idx,
+                             @RequestBody ForestSaveDto forestSaveDto) {
+        return forestService.create(user_idx, forestSaveDto);
+    }*/
 
     // 6.  그룹 사진 수정
     @PatchMapping("/forests/{forest_idx}/photo")

@@ -13,6 +13,7 @@ import javax.persistence.*;
 public class Forest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, unique = true)
     private Long forestIdx;
 
     @Column
@@ -34,8 +35,7 @@ public class Forest {
     private String forestIntro;
 
     @Builder
-    public Forest(Long forestIdx, String forestName, String leader, Integer size, String forestImg, Boolean deleteFlag, String forestIntro) {
-        this.forestIdx = forestIdx;
+    public Forest(String forestName, String leader, Integer size, String forestImg, Boolean deleteFlag, String forestIntro) {
         this.forestName = forestName;
         this.leader = leader;
         this.size = size;
