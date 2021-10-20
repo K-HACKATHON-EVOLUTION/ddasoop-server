@@ -142,7 +142,7 @@ public class ForestService {
             Forest forest = Forest.builder()
                     .forestImg(null)
                     .deleteFlag(false)
-                    .size(10)
+                    .size(1)
                     .forestIntro(forestSaveDto.getForestIntro())
                     .forestName(forestSaveDto.getForestName())
                     .leader(user_idx)
@@ -210,30 +210,6 @@ public class ForestService {
         return forestMemberListDto;
     }
 
-    @Transactional
-    public String updateForestPhoto(Long forest_idx, MultipartFile uploadFile){
-        String newPhoto;
-        Forest forest = forestRepository.findByForestIdxAndDeleteFlagFalse(forest_idx);
-        if(forest == null){
-            return "숲이 존재하지 않습니다. forest_idx: " +forest_idx;
-        }
-        try{
-            String oldPhoto = forest.getForestImg();
-            newPhoto = s3Service.update(oldPhoto,uploadFile);
-
-            if(newPhoto!=null){
-                forest.updatePhotoUrl("https://"+s3Service.CLOUD_FRONT_DOMAIN_NAME+"/"+newPhoto);
-                s3Service.delete(oldPhoto);
-            } else {
-                return "file type is not proper or is corrupted";
-            }
-
-        } catch (Exception e){
-            System.out.println("file exception");
-            return "error occured during upload" + e.getMessage();
-        }
-        return "숲 사진이 변경되었습니다";
-    }
 
     @Transactional
     public String updateForestImg(Long forest_idx, MultipartFile uploadFile){
