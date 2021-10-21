@@ -40,6 +40,7 @@ public class CourseService {
                 CourseImage courseImage = courseImageRepository.findCourseImageByCourse(course);
                 Integer heart = heartRepository.countHeartByCourseAndDeleteFlagFalse(course);
                 topCourseDtoList.add(TopCourseDto.builder()
+                        .course_idx(course.getCourseIdx())
                         .course_intro(course.getCourseIntro())
                         .course_name(course.getCourseName())
                         .course_img(courseImage.getFilePath())
@@ -57,6 +58,7 @@ public class CourseService {
             CourseImage courseImage = courseImageRepository.findCourseImageByCourse(course);
             Integer heart = heartRepository.countHeartByCourseAndDeleteFlagFalse(course);
             topCourseDtoList.add(TopCourseDto.builder()
+                    .course_idx(course.getCourseIdx())
                     .course_name(course.getCourseName())
                     .course_intro(course.getCourseIntro())
                     .course_img(courseImage.getFilePath())
@@ -77,6 +79,7 @@ public class CourseService {
             CourseImage courseImage = courseImageRepository.findCourseImageByCourse(course);
             Integer heart= heartRepository.countHeartByCourseAndDeleteFlagFalse(course);
             topCourseDtoList.add(TopCourseDto.builder()
+                    .course_idx(course.getCourseIdx())
                     .course_heart(heart)
                     .course_img(courseImage.getFilePath())
                     .course_intro(course.getCourseIntro())
