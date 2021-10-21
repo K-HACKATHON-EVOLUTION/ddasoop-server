@@ -1,8 +1,8 @@
 package com.evolution.ddasoop.web;
 
 import com.evolution.ddasoop.service.ForestService;
-import com.evolution.ddasoop.service.UserService;
 import com.evolution.ddasoop.web.dto.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,7 +18,6 @@ import java.util.Map;
 public class ForestController {
 
     private final ForestService forestService;
-    private final UserService userService;
 
     //1. Group List 페이지 숲 목록 불러오기
     @GetMapping("/forests")
@@ -28,29 +27,45 @@ public class ForestController {
 
     //2. Group List 페이지 MY 숲 가져오기 **내 그룹 반환(리스트 컨테이너 형태)**
     @GetMapping("/users/{user_idx}/forest")
-    public MyForestDto getMyForest(@PathVariable("user_idx") String user_idx){
-        return userService.getMyForest(user_idx);
+    public ForestListResponseDto getMyForest(@PathVariable("user_idx") String user_idx){
+        return forestService.getMyForest(user_idx);
     }
 
     //3.그룹 하나 가져오기
-    @GetMapping("/forest/{forest_idx}/user")
-    public ForestMemberListDto ForestUserList(@PathVariable("forest_idx") Long forest_idx){
-        return forestService.getForest(forest_idx);
+    @GetMapping("/forest/{forest_idx}/{user_idx}/user")
+    public ForestMemberListDto ForestUserList(@PathVariable("forest_idx") Long forest_idx,@PathVariable("user_idx") String user_idx){
+        return forestService.getForest(forest_idx, user_idx);
     }
 
     //4. 숲 검색하기 그룹 검색(특정 텍스트값 그룹 이름에 포함하고 있는 그룹을 리스트로 반환)
     @GetMapping("/forest/search")
-    public List<SearchForestDto> searchForest(@RequestParam(value="forest_name", required = false, defaultValue = "") String forestName){
-        return forestService.searchForests(forestName);
+    public List<ForestListResponseDto> searchForest(@RequestParam(value="forest_name", required = false, defaultValue = "") String forestName){
+        return forestService.search(forestName);
     }
 
     //5. 숲 생성하기
-    @PostMapping("/forests/{user_idx}")
+    /*@PostMapping("/forests/{user_idx}")
     public String makeForest(@PathVariable String user_idx,
                              @RequestPart(value = "forestSaveDto",required = false) ForestSaveDto forestSaveDto,
                              @RequestPart (value = "photo")MultipartFile photo) throws IOException {
         return forestService.createForest(user_idx, forestSaveDto, photo);
+    }*/
+
+    //숲 생성하기 다시
+    @PostMapping("/forests/{user_idx}")
+    public String makeForest(@PathVariable String user_idx,
+                             @RequestParam(value = "photo",required = false) MultipartFile photo,
+                             @RequestParam(value = "forestSaveDto") String forestSaveDto) throws Exception {
+        ForestSaveDto forestDto = new ObjectMapper().readValue(forestSaveDto,ForestSaveDto.class);
+        return forestService.create(user_idx, forestDto, photo);
     }
+
+    //5. 숲 생성하기-json
+   /*@PostMapping("/forests/{user_idx}")
+    public String makeForest(@PathVariable String user_idx,
+                             @RequestBody ForestSaveDto forestSaveDto) {
+        return forestService.create(user_idx, forestSaveDto);
+    }*/
 
     // 6.  그룹 사진 수정
     @PatchMapping("/forests/{forest_idx}/photo")

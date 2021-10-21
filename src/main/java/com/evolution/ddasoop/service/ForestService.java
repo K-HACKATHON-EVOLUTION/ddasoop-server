@@ -7,11 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -21,12 +19,11 @@ public class ForestService {
     private final UserRepository userRepository;
     private final S3Service s3Service;
     private final ForestImageRepository forestImageRepository;
+    private final TreeRepository treeRepository;
 
     @Transactional
     public List<ForestListResponseDto> getAllForest(){
      List<ForestListResponseDto> forests = new ArrayList<>();
-     List<User> users = new ArrayList<>();
-
      for (Forest forest: forestRepository.findAllByDeleteFlagFalseOrderByForestName()){
          double forest_carbon=0;
          for(User user: userRepository.findAllByDeleteFlagIsFalseAndForest(forest)){
@@ -52,10 +49,50 @@ public class ForestService {
     }
 
     @Transactional
-    public List<SearchForestDto> searchForests(String forestName){
-        return forestRepository.findByForestNameContaining(forestName).stream()
-                .map(SearchForestDto::new)
-                .collect(Collectors.toList());
+    public ForestListResponseDto getMyForest(String user_idx){
+        Forest forest = userRepository.findByUserIdxAndDeleteFlagFalse(user_idx).getForest();
+        ForestImage forestImage = forestImageRepository.findForestImageByForest(forest);
+        double forest_carbon=0;
+        for(User user: userRepository.findAllByDeleteFlagIsFalseAndForest(forest)){
+            forest_carbon += user.getTotalCarbon();
+        }
+
+        ForestListResponseDto forestListResponseDto = ForestListResponseDto.builder()
+                .forestIdx(forest.getForestIdx())
+                .leader(forest.getLeader())
+                .forestName(forest.getForestName())
+                .forestImg(forestImage.getFilePath())
+                .size(forest.getSize())
+                .deleteFlag(forest.getDeleteFlag())
+                .carbon(forest_carbon)
+                .build();
+
+        return forestListResponseDto;
+    }
+
+    @Transactional
+    public List<ForestListResponseDto> search(String forest_name){
+        List<ForestListResponseDto> forestListResponseDtos = new ArrayList<>();
+        for(Forest forest: forestRepository.findByForestNameContaining(forest_name)){
+
+            ForestImage forestImage = forestImageRepository.findForestImageByForest(forest);
+
+            double total_carbon=0;
+            for(User user: userRepository.findAllByDeleteFlagIsFalseAndForest(forest)){
+                total_carbon += user.getTotalCarbon();
+            }
+            forestListResponseDtos.add(ForestListResponseDto.builder()
+                    .forestIdx(forest.getForestIdx())
+                    .leader(forest.getLeader())
+                    .forestName(forest.getForestName())
+                    .forestImg(forestImage.getFilePath())
+                    .size(forest.getSize())
+                    .deleteFlag(forest.getDeleteFlag())
+                    .carbon(total_carbon)
+                    .build());
+        }
+        return forestListResponseDtos;
+
     }
 
     @Transactional
@@ -95,37 +132,46 @@ public class ForestService {
         return "숲이 삭제되었습니다.";
     }
 
+
     @Transactional
-    public String createForest(String user_idx, ForestSaveDto forestSaveDto, MultipartFile photo) throws IOException {
-        User user = userRepository.findByUserIdxAndDeleteFlagFalse(user_idx);
-        if(user.getForest() == null){
+    public String create(String user_idx, ForestSaveDto forestSaveDto,MultipartFile photo) throws Exception{
+            User user = userRepository.findByUserIdxAndDeleteFlagFalse(user_idx);
+            if(user.getForest()!=null){
+            throw new Exception("이미 유저에게 숲이 존재합니다!");
+            }
             Forest forest = Forest.builder()
+                    .forestImg(null)
+                    .deleteFlag(false)
+                    .size(1)
+                    .forestIntro(forestSaveDto.getForestIntro())
                     .forestName(forestSaveDto.getForestName())
                     .leader(user_idx)
-                    .forestIntro(forestSaveDto.getForestIntro())
-                    .size(10)
-                    .deleteFlag(Boolean.FALSE)
                     .build();
+
             forestRepository.save(forest);
+
             user.setForest(forest);
+
             ForestImage forestImage = s3Service.upload(photo,forest);
-            forestImageRepository.save(forestImage);
+            if(!forestImage.getFilePath().isEmpty()){
+                forestImageRepository.save(forestImage);
+            }
             return "숲이 생성되었습니다";
-        }
-        else return"이미 가입된 숲이 존재합니다!";
     }
 
     @Transactional
-    public ForestMemberListDto getForest(Long forest_idx){
+    public ForestMemberListDto getForest(Long forest_idx, String user_idx){
         Forest forest = forestRepository.findById(forest_idx).get();
         Double trees = 0.0;
 
         List<MemberListDto> memberList = new ArrayList<>();
         for(User user: userRepository.findAllByForestOrderByTotalCarbon(forest)){
+            Tree tree = treeRepository.findTreeByUserAndGrowthLessThan(user, 5);
             memberList.add(MemberListDto.builder()
                             .user_name(user.getUserName())
                             .user_carbon(user.getTotalCarbon())
                             .user_idx(user.getUserIdx())
+                            .user_treeImg(tree.getTreeImg().getFilePath())
                     .build());
         }
 
@@ -134,39 +180,36 @@ public class ForestService {
             trees = trees + memberList.get(i).getUser_carbon();
         }
 
+        int inList =0, own =0;
+        String Leader = forest.getLeader();
+
+        for(MemberListDto memberListDto:memberList){
+            if(memberListDto.getUser_idx().equals(user_idx)){
+                inList =1;
+                break;
+            }
+        }
+
+        if(Leader.equals(user_idx)==true){
+            own = 0;
+        }else if(Leader.equals(user_idx)==false&&inList==1) {
+            own =1;
+        }else if(Leader.equals(user_idx)==false&&inList==0)
+            own =2;
+        else own = 0;
+
         ForestMemberListDto forestMemberListDto = ForestMemberListDto.builder()
                 .member(memberList)
                 .leader(forest.getLeader())
                 .total_trees(trees)
+                .own(own)
+                .forest_intro(forest.getForestIntro())
                 .build();
 
+        memberList.sort(Comparator.comparing(MemberListDto::getUser_carbon));
         return forestMemberListDto;
     }
 
-    @Transactional
-    public String updateForestPhoto(Long forest_idx, MultipartFile uploadFile){
-        String newPhoto;
-        Forest forest = forestRepository.findByForestIdxAndDeleteFlagFalse(forest_idx);
-        if(forest == null){
-            return "숲이 존재하지 않습니다. forest_idx: " +forest_idx;
-        }
-        try{
-            String oldPhoto = forest.getForestImg();
-            newPhoto = s3Service.update(oldPhoto,uploadFile);
-
-            if(newPhoto!=null){
-                forest.updatePhotoUrl("https://"+s3Service.CLOUD_FRONT_DOMAIN_NAME+"/"+newPhoto);
-                s3Service.delete(oldPhoto);
-            } else {
-                return "file type is not proper or is corrupted";
-            }
-
-        } catch (Exception e){
-            System.out.println("file exception");
-            return "error occured during upload" + e.getMessage();
-        }
-        return "숲 사진이 변경되었습니다";
-    }
 
     @Transactional
     public String updateForestImg(Long forest_idx, MultipartFile uploadFile){

@@ -23,7 +23,7 @@ public class Course {
     private String courseIntro;
 
     @Column
-    private String theme;
+    private Long theme;
 
     @Column
     private Timestamp courseDate;

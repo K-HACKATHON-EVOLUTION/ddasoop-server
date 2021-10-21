@@ -34,7 +34,7 @@ public class CourseApiController {
 
     // 3. 테마별 코스 반환(최신순)
     @GetMapping("/course/theme/{theme}")
-    public List<TopCourseDto> getThemeCourseList(@PathVariable("theme") String theme){
+    public List<TopCourseDto> getThemeCourseList(@PathVariable("theme") Long theme){
         return courseService.getThemeCourse(theme);
     }
 

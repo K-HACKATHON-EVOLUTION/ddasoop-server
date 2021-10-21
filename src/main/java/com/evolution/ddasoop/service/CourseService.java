@@ -34,7 +34,7 @@ public class CourseService {
     }
 
     @Transactional
-    public List<TopCourseDto> getThemeCourse(String theme){
+    public List<TopCourseDto> getThemeCourse(Long theme){
         List <TopCourseDto> topCourseDtoList = new ArrayList<>();
             for(Course course : courseRepository.findAllByThemeAndDeleteFlagFalseOrderByCourseDate(theme)){
                 CourseImage courseImage = courseImageRepository.findCourseImageByCourse(course);
