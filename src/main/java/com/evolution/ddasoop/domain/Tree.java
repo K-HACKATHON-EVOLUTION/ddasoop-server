@@ -46,7 +46,7 @@ public class Tree {
 
     public Double updateTree(Double carbon){
         Double tempCarbon = treeCarbon + carbon;
-        Double i = (tempCarbon+0.5);
+        Double i = (tempCarbon+1);
         Integer tempGrowth = (i.intValue()+1)/2;
 
         if(tempGrowth > 5){
@@ -73,7 +73,7 @@ public class Tree {
     }
 
     public void updateGrowth(Double carbon){
-        Double i = carbon+0.5;
+        Double i = carbon+1;
         this.growth = (i.intValue()+1)/2;
     }
 
