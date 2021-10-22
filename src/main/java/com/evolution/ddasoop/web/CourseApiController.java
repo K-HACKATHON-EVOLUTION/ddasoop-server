@@ -57,7 +57,7 @@ public class CourseApiController {
             theme = 2;
             return courseService.getThemeCourse(theme);
         }else if(select == 5){
-            //문화지
+            //문화재
             theme = 3;
             return courseService.getThemeCourse(theme);
         }else return null;

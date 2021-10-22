@@ -77,7 +77,8 @@ public class S3Service {
             }
           
             SimpleDateFormat date = new SimpleDateFormat("yyyymmddHHmmss");
-            String fileName = FilenameUtils.getBaseName(photo.getOriginalFilename()) + "_" + date.format(new Date()) + "." + FilenameUtils.getExtension(photo.getOriginalFilename());
+            //String fileName = FilenameUtils.getBaseName(photo.getOriginalFilename()) + "_" + date.format(new Date()) + "." + FilenameUtils.getExtension(photo.getOriginalFilename());
+            String fileName = "forest_"+ forest.getForestIdx() + "_" + date.format(new Date()) + "." + FilenameUtils.getExtension(photo.getOriginalFilename());
 
 
             s3Client.putObject(new PutObjectRequest(bucket, fileName, photo.getInputStream(), null)
