@@ -106,6 +106,7 @@ public class CourseService {
             Course heartCourse = heart.getCourse();
             CourseImage courseImage = courseImageRepository.findCourseImageByCourse(heartCourse);
             heartCourseList.add(TopCourseDto.builder()
+                    .course_idx(heartCourse.getCourseIdx())
                     .course_heart(heartRepository.countHeartByCourseAndDeleteFlagFalse(heartCourse))
                     .course_intro(heartCourse.getCourseIntro())
                     .course_name(heartCourse.getCourseName())
