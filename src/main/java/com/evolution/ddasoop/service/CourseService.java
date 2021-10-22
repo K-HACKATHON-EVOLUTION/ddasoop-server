@@ -87,7 +87,7 @@ public class CourseService {
                     .build());
         }
 
-        topCourseDtoList.sort(Comparator.comparing(TopCourseDto::getCourse_heart).reversed());
+        topCourseDtoList.sort(Comparator.comparing(TopCourseDto::getCourse_heart));
 
 
 
