@@ -45,18 +45,30 @@ public class ForestController {
 
 
     //숲 생성하기 다시
-    @PostMapping("/forests/{user_idx}")
+    /*@PostMapping("/forests/{user_idx}")
     public String makeForest(@PathVariable String user_idx,
                              @RequestParam(value = "photo",required = false) MultipartFile photo,
                              @RequestParam(value = "forestSaveDto") String forestSaveDto) throws Exception {
         ForestSaveDto forestDto = new ObjectMapper().readValue(forestSaveDto,ForestSaveDto.class);
         return forestService.create(user_idx, forestDto, photo);
+    }*/
+
+    @PostMapping("/forests/{user_idx}")
+    public String makeForest(@PathVariable String user_idx,
+                             @RequestBody ForestSaveDto forestSaveDto) throws Exception {
+        return forestService.create(user_idx, forestSaveDto);
     }
 
     // 6.  그룹 사진 수정
-    @PatchMapping("/forests/{forest_idx}/photo")
+   /* @PatchMapping("/forests/{forest_idx}/photo")
     public String updateForestPhoto(@PathVariable Long forest_idx, @RequestParam("uploadFile") MultipartFile uploadFile){
         return forestService.updateForestImg(forest_idx,uploadFile);
+    }*/
+
+    @PatchMapping("/forests/{forest_idx}/photo")
+    public String updateForestPhoto(@PathVariable Long forest_idx,@RequestBody Map<String, String> param){
+        String forest_img = param.get("forestImg");
+        return forestService.updateForestImg(forest_idx,forest_img);
     }
 
 
