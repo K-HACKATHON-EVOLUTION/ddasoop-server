@@ -43,13 +43,6 @@ public class ForestController {
         return forestService.search(forestName);
     }
 
-    //5. 숲 생성하기
-    /*@PostMapping("/forests/{user_idx}")
-    public String makeForest(@PathVariable String user_idx,
-                             @RequestPart(value = "forestSaveDto",required = false) ForestSaveDto forestSaveDto,
-                             @RequestPart (value = "photo")MultipartFile photo) throws IOException {
-        return forestService.createForest(user_idx, forestSaveDto, photo);
-    }*/
 
     //숲 생성하기 다시
     @PostMapping("/forests/{user_idx}")
@@ -59,13 +52,6 @@ public class ForestController {
         ForestSaveDto forestDto = new ObjectMapper().readValue(forestSaveDto,ForestSaveDto.class);
         return forestService.create(user_idx, forestDto, photo);
     }
-
-    //5. 숲 생성하기-json
-   /*@PostMapping("/forests/{user_idx}")
-    public String makeForest(@PathVariable String user_idx,
-                             @RequestBody ForestSaveDto forestSaveDto) {
-        return forestService.create(user_idx, forestSaveDto);
-    }*/
 
     // 6.  그룹 사진 수정
     @PatchMapping("/forests/{forest_idx}/photo")

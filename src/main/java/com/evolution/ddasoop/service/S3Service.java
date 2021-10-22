@@ -67,8 +67,8 @@ public class S3Service {
                     originalFileExtension = ".jpg";
                 } else if (contentType.contains("image/png")) {
                     originalFileExtension = ".png";
-                } else if (contentType.contains("image/gif")) {
-                    originalFileExtension = ".gif";
+                } else if(contentType.contains("image/jpeg")){
+                    originalFileExtension = ".jpeg";
                 }
                 // 다른 파일 명이면 아무 일 하지 않는다
                 else {
