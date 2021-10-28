@@ -115,8 +115,10 @@ public class ForestService {
     @Transactional
     public String deleteForestMember(long forest_idx, String user_idx){
         User user = userRepository.findById(user_idx).get();
+        Forest forest = forestRepository.findByForestIdxAndDeleteFlagFalse(forest_idx);
         if(user.getForest().getForestIdx() == forest_idx){
             user.setForest(null);
+            forest.setSize(forest.getSize()-1);
             return "술의 그룹원을 내보냈습니다.";
         } else return "해당 그룹원은 숲의 멤버가 아닙니다.";
     }

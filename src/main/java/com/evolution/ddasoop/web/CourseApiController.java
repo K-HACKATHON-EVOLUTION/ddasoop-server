@@ -1,16 +1,12 @@
 package com.evolution.ddasoop.web;
 
 
-import com.evolution.ddasoop.domain.Course;
+
 import com.evolution.ddasoop.service.CourseService;
 import com.evolution.ddasoop.web.dto.CourseDto;
 import com.evolution.ddasoop.web.dto.TopCourseDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.Month;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -28,9 +24,9 @@ public class CourseApiController {
 
     // 4. 코스 하나 반환
     //location String 구분 수정 필요
-    @GetMapping("/course/{course_idx}")
-    public CourseDto getaCourse(@PathVariable("course_idx") Long course_idx){
-        return courseService.getAcourse(course_idx);
+    @GetMapping("/course/{course_idx}/{user_idx}")
+    public CourseDto getaCourse(@PathVariable("course_idx") Long course_idx, @PathVariable("user_idx") String user_idx){
+        return courseService.getAcourse(course_idx,user_idx);
     }
 
     //전체 코스 = 0, 내가 저장한 코스 =1 , 테마별 코스 2~5

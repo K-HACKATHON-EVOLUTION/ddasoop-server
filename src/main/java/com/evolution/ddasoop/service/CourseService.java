@@ -2,6 +2,7 @@ package com.evolution.ddasoop.service;
 
 import com.evolution.ddasoop.domain.*;
 import com.evolution.ddasoop.web.dto.CourseDto;
+import com.evolution.ddasoop.web.dto.MapDto;
 import com.evolution.ddasoop.web.dto.TopCourseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,17 +21,35 @@ public class CourseService {
     private final UserRepository userRepository;
 
     @Transactional
-    public CourseDto getAcourse(Long course_idx){
+    public CourseDto getAcourse(Long course_idx,String user_idx){
+
+        Heart heart = heartRepository.findHeartByCourseCourseIdxAndUserUserIdxAndDeleteFlagFalse(course_idx, user_idx);
+        Integer state = 0;
+        if(heart == null){
+            state = 0;
+        }else state = 1;
+
         Course course = courseRepository.findCourseByCourseIdxAndDeleteFlagFalse(course_idx);
-        if(course !=null){
+        List<MapDto> mapDtos = new ArrayList<>();
+        String source = course.getLocation();
+
+        String[] srcArr = source.split(",");
+        for(int i =0; i< srcArr.length;i+=2){
+            mapDtos.add(MapDto.builder()
+                    .Longitude(srcArr[i])
+                    .Latitude(srcArr[i+1])
+                    .build());
+        }
+
             CourseDto courseDto = CourseDto.builder()
                     .course_name(course.getCourseName())
                     .course_intro(course.getCourseIntro())
                     .distance(course.getDistance())
-                    .location(course.getLocation())
+                    .location(mapDtos)
+                    .heart(state)
                     .build();
+
             return courseDto;
-        }else return CourseDto.builder().build();
     }
 
     @Transactional
