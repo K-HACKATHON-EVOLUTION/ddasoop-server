@@ -3,12 +3,15 @@ package com.evolution.ddasoop.service;
 import com.evolution.ddasoop.domain.*;
 import com.evolution.ddasoop.web.dto.*;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -112,8 +115,10 @@ public class ForestService {
     @Transactional
     public String deleteForestMember(long forest_idx, String user_idx){
         User user = userRepository.findById(user_idx).get();
+        Forest forest = forestRepository.findByForestIdxAndDeleteFlagFalse(forest_idx);
         if(user.getForest().getForestIdx() == forest_idx){
             user.setForest(null);
+            forest.setSize(forest.getSize()-1);
             return "술의 그룹원을 내보냈습니다.";
         } else return "해당 그룹원은 숲의 멤버가 아닙니다.";
     }
@@ -133,20 +138,21 @@ public class ForestService {
     }
 
 
-    @Transactional
+    /*@Transactional
     public String create(String user_idx, ForestSaveDto forestSaveDto,MultipartFile photo) throws Exception{
             User user = userRepository.findByUserIdxAndDeleteFlagFalse(user_idx);
             if(user.getForest()!=null){
             throw new Exception("이미 유저에게 숲이 존재합니다!");
             }
-            Forest forest = Forest.builder()
-                    .forestImg(null)
-                    .deleteFlag(false)
-                    .size(1)
-                    .forestIntro(forestSaveDto.getForestIntro())
-                    .forestName(forestSaveDto.getForestName())
-                    .leader(user_idx)
-                    .build();
+
+            Forest forest = new Forest(
+                    forestSaveDto.getForestName(),
+                    user_idx,
+                    1,
+                    null,
+                    false,
+                    forestSaveDto.getForestIntro()
+            );
 
             forestRepository.save(forest);
 
@@ -157,7 +163,38 @@ public class ForestService {
                 forestImageRepository.save(forestImage);
             }
             return "숲이 생성되었습니다";
-    }
+    }*/
+
+    @Transactional
+    public String create(String user_idx, ForestSaveDto forestSaveDto) {
+        User user = userRepository.findByUserIdxAndDeleteFlagFalse(user_idx);
+
+            Forest forest = Forest.builder()
+                    .forestIntro(forestSaveDto.getForestIntro())
+                    .leader(user_idx)
+                    .forestName(forestSaveDto.getForestName())
+                    .size(1)
+                    .deleteFlag(false)
+                    .forestImg(null)
+                    .build();
+
+            forestRepository.save(forest);
+
+            SimpleDateFormat date = new SimpleDateFormat("yyyyMMddHHmmss");
+
+            ForestImage forestImage = ForestImage.builder()
+                    .forest(forest)
+                    .filePath(forestSaveDto.getForestImg())
+                    .fileSize(Long.valueOf(1000))
+                    .originalFileName("forest_"+forest.getForestIdx()+"_"+date)
+                    .build();
+
+            forestImageRepository.save(forestImage);
+
+            user.updateForest(forest);
+            return "숲이 생성되었습니다";
+        }
+
 
     @Transactional
     public ForestMemberListDto getForest(Long forest_idx, String user_idx){
@@ -211,7 +248,7 @@ public class ForestService {
     }
 
 
-    @Transactional
+    /*@Transactional
     public String updateForestImg(Long forest_idx, MultipartFile uploadFile){
         String newPhoto;
         Forest forest = forestRepository.findByForestIdxAndDeleteFlagFalse(forest_idx);
@@ -236,5 +273,33 @@ public class ForestService {
             return "error occured during upload " + e.getMessage();
         }
         return "숲 사진이 변경되었습니다";
+    }*/
+
+    @Transactional
+    public String updateForestImg(Long forest_idx, String uploadFile){
+        String newPhoto = uploadFile;
+
+        SimpleDateFormat date = new SimpleDateFormat("yyyyMMddHHmmss");
+
+        Forest forest = forestRepository.findByForestIdxAndDeleteFlagFalse(forest_idx);
+        ForestImage forestImage = forestImageRepository.findForestImageByForest(forest);
+        if(forest == null){
+            return "숲이 존재하지 않습니다. forest_idx: " + forest_idx;
+        }
+        try{
+            if(newPhoto!=null){
+                forestImage.setOriginalFileName("forest_" + forest_idx + "_"+ date.format(new Date()));
+                forestImage.updatePath(newPhoto);
+            } else {
+                return "file type is not proper or is corrupted";
+            }
+
+        } catch (Exception e){
+            System.out.println("file exception");
+            return "error occured during upload " + e.getMessage();
+        }
+        return "숲 사진이 변경되었습니다";
     }
+
+
 }

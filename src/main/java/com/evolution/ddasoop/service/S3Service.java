@@ -58,7 +58,6 @@ public class S3Service {
         if (photo != null) {
             String contentType = photo.getContentType();
             String originalFileExtension;
-
             //확장자명 없을 경우
             if (ObjectUtils.isEmpty(contentType)) {
                 return null;
@@ -67,17 +66,17 @@ public class S3Service {
                     originalFileExtension = ".jpg";
                 } else if (contentType.contains("image/png")) {
                     originalFileExtension = ".png";
-                } else if (contentType.contains("image/gif")) {
-                    originalFileExtension = ".gif";
+                } else if(contentType.contains("image/jpeg")){
+                    originalFileExtension = ".jpeg";
                 }
                 // 다른 파일 명이면 아무 일 하지 않는다
                 else {
                     return null;
                 }
             }
-          
             SimpleDateFormat date = new SimpleDateFormat("yyyymmddHHmmss");
-            String fileName = FilenameUtils.getBaseName(photo.getOriginalFilename()) + "_" + date.format(new Date()) + "." + FilenameUtils.getExtension(photo.getOriginalFilename());
+            //String fileName = FilenameUtils.getBaseName(photo.getOriginalFilename()) + "_" + date.format(new Date()) + "." + FilenameUtils.getExtension(photo.getOriginalFilename());
+            String fileName = "forest_"+ forest.getForestIdx() + "_" + date.format(new Date()) + "." + FilenameUtils.getExtension(photo.getOriginalFilename());
 
 
             s3Client.putObject(new PutObjectRequest(bucket, fileName, photo.getInputStream(), null)

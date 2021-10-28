@@ -3,19 +3,25 @@ package com.evolution.ddasoop.web.dto;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 public class CourseDto {
+
+
 
     private String course_name;
     private String course_intro;
     private Double distance;
-    private String location;
+    private List location;
+    private Integer heart;
 
     @Builder
-    public CourseDto(String course_name, String course_intro, Double distance, String location) {
+    public CourseDto(String course_name, String course_intro, Double distance, List location, Integer heart) {
         this.course_name = course_name;
         this.course_intro = course_intro;
         this.distance = distance;
         this.location = location;
+        this.heart = heart;
     }
 }

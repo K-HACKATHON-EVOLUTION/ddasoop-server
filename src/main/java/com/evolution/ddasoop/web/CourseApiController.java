@@ -1,16 +1,12 @@
 package com.evolution.ddasoop.web;
 
 
-import com.evolution.ddasoop.domain.Course;
+
 import com.evolution.ddasoop.service.CourseService;
 import com.evolution.ddasoop.web.dto.CourseDto;
 import com.evolution.ddasoop.web.dto.TopCourseDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.Month;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -26,33 +22,41 @@ public class CourseApiController {
         return courseService.getTop3Course();
     }
 
-    // 2. 전체 코스 반환(최신순)
-    @GetMapping("/courses")
-    public List<TopCourseDto> getCourseList(){
-        return courseService.getAllCourse();
-    }
-
-    // 3. 테마별 코스 반환(최신순)
-    @GetMapping("/course/theme/{theme}")
-    public List<TopCourseDto> getThemeCourseList(@PathVariable("theme") Long theme){
-        return courseService.getThemeCourse(theme);
-    }
-
     // 4. 코스 하나 반환
     //location String 구분 수정 필요
-    @GetMapping("/course/{course_idx}")
-    public CourseDto getaCourse(@PathVariable("course_idx") Long course_idx){
-        return courseService.getAcourse(course_idx);
+    @GetMapping("/course/{course_idx}/{user_idx}")
+    public CourseDto getaCourse(@PathVariable("course_idx") Long course_idx, @PathVariable("user_idx") String user_idx){
+        return courseService.getAcourse(course_idx,user_idx);
     }
 
-    @GetMapping("/users/{userIdx}/courses/heart")
-    public ResponseEntity<Object> getHeartedCourse(@PathVariable String userIdx){
-        try{
-            return ResponseEntity.ok().body(courseService.getHeartedCourse(userIdx));
-        }catch(Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail");
-        }
+    //전체 코스 = 0, 내가 저장한 코스 =1 , 테마별 코스 2~5
+    @GetMapping("/users/{userIdx}/courses/{select}")
+    public List<TopCourseDto> selectMenu(@PathVariable("userIdx") String userIdx,
+                                        @PathVariable("select") Long select){
+        long theme = 0;
+        if(select == 0 ){
+            //2. 전체코스 보기
+            return courseService.getAllCourse();
+        }else if(select == 1){
+            //내가 저장한 코스
+            return courseService.getHeartedCourse(userIdx);
+        }else if(select == 2){
+            //3.테마별: 한강&하천
+            theme = 0;
+            return courseService.getThemeCourse(theme);
+        }else if(select == 3){
+            //공원
+            theme = 1;
+            return courseService.getThemeCourse(theme);
+        }else if(select ==4){
+            //도심
+            theme = 2;
+            return courseService.getThemeCourse(theme);
+        }else if(select == 5){
+            //문화재
+            theme = 3;
+            return courseService.getThemeCourse(theme);
+        }else return null;
     }
 
 }
