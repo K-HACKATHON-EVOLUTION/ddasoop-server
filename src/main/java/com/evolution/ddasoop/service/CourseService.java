@@ -36,8 +36,8 @@ public class CourseService {
         String[] srcArr = source.split(",");
         for(int i =0; i< srcArr.length;i+=2){
             mapDtos.add(MapDto.builder()
-                    .Longitude(srcArr[i])
-                    .Latitude(srcArr[i+1])
+                    .Longitude(Double.parseDouble(srcArr[i]))
+                    .Latitude(Double.parseDouble(srcArr[i+1]))
                     .build());
         }
 

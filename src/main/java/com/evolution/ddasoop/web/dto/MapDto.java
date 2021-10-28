@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class MapDto {
-    private String Latitude;
-    private String Longitude;
+    private double Latitude;
+    private double Longitude;
 }
