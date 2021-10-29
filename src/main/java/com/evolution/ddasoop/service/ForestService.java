@@ -203,7 +203,7 @@ public class ForestService {
 
         List<MemberListDto> memberList = new ArrayList<>();
         for(User user: userRepository.findAllByForestOrderByTotalCarbon(forest)){
-            Tree tree = treeRepository.findTreeByUserAndGrowthLessThan(user, 5);
+            Tree tree = treeRepository.findByUserUserIdxAndTreeCarbonLessThan(user.getUserIdx(),Tree.MAX_TREE);
             memberList.add(MemberListDto.builder()
                             .user_name(user.getUserName())
                             .user_carbon(user.getTotalCarbon())
