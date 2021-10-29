@@ -13,7 +13,7 @@ public class HeartService {
     private final CourseRepository courseRepository;
 
     @Transactional
-    public String saveHeart(Long courseIdx, String userIdx) throws IllegalArgumentException{
+    public String changeHeart(Long courseIdx, String userIdx) throws IllegalArgumentException{
         Course course = courseRepository.findCourseByCourseIdxAndDeleteFlagFalse(courseIdx);
         User user = userRepository.findByUserIdxAndDeleteFlagFalse(userIdx);
 
@@ -21,31 +21,17 @@ public class HeartService {
             throw new IllegalArgumentException();
         }
 
-        heartRepository.save(Heart.builder()
-                .course(course)
-                .user(user)
-                .deleteFlag(false)
-                .build());
-
-        return "success";
-    }
-
-    @Transactional
-    public String deleteHeart(Long courseIdx, String userIdx) throws IllegalArgumentException{
-        Course course = courseRepository.findCourseByCourseIdxAndDeleteFlagFalse(courseIdx);
-        User user = userRepository.findByUserIdxAndDeleteFlagFalse(userIdx);
-
-        if((course == null)||(user == null)){
-            throw new IllegalArgumentException();
-        }
-
-        Heart heart = heartRepository.findHeartByCourseCourseIdxAndUserUserIdxAndDeleteFlagFalse(courseIdx,userIdx);
+        Heart heart = heartRepository.findHeartByCourseCourseIdxAndUserUserIdx(courseIdx,userIdx);
 
         if(heart == null){
-            throw new IllegalArgumentException();
+            heartRepository.save(Heart.builder()
+                    .course(course)
+                    .user(user)
+                    .deleteFlag(false)
+                    .build());
+        }else{
+            heart.updateDeleteFlag();
         }
-
-        heart.updateDeleteFlag();
 
         return "success";
     }

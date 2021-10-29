@@ -35,6 +35,6 @@ public class Heart extends BaseTimeEntity {
     }
 
     public void updateDeleteFlag(){
-        deleteFlag = true;
+        deleteFlag = !deleteFlag;
     }
 }
