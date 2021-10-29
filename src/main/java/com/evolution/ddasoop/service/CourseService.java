@@ -3,6 +3,7 @@ package com.evolution.ddasoop.service;
 import com.evolution.ddasoop.domain.*;
 import com.evolution.ddasoop.web.dto.CourseDto;
 import com.evolution.ddasoop.web.dto.MapDto;
+import com.evolution.ddasoop.web.dto.MapNameDto;
 import com.evolution.ddasoop.web.dto.TopCourseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -41,12 +42,23 @@ public class CourseService {
                     .build());
         }
 
+        List<MapNameDto> mapNameDtoList = new ArrayList<>();
+        String namelist = course.getLocationName();
+        String[] nameArr = namelist.split(",");
+        for(int i =0;i< nameArr.length;i++){
+            mapNameDtoList.add(
+                    MapNameDto.builder()
+                            .location_name(nameArr[i])
+                            .build());
+        }
+
             CourseDto courseDto = CourseDto.builder()
                     .course_name(course.getCourseName())
                     .course_intro(course.getCourseIntro())
                     .distance(course.getDistance())
                     .location(mapDtos)
                     .heart(state)
+                    .location_name(mapNameDtoList)
                     .build();
 
             return courseDto;

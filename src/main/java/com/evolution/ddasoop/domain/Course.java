@@ -37,4 +37,7 @@ public class Course {
     @Column
     private String location;
 
+    @Column
+    private String locationName;
+
 }
