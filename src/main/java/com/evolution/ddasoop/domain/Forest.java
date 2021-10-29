@@ -62,5 +62,9 @@ public class Forest {
         this.forestImg = photoUrl;
     }
 
+    public void updateSize(Integer num){
+        size+=num;
+    }
+
 }
 

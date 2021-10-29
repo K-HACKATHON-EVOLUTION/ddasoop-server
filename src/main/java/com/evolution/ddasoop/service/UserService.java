@@ -120,7 +120,12 @@ public class UserService {
             throw new IllegalArgumentException();
         }
 
+        if(user.getForest() != null){
+            throw new IllegalArgumentException();
+        }
+
         user.updateForest(forest);
+        forest.updateSize(1);
         return "success";
     }
 
@@ -130,6 +135,10 @@ public class UserService {
         if(user == null){
             throw new IllegalArgumentException();
         }
+        if(user.getForest() == null){
+            throw new IllegalArgumentException();
+        }
+        user.getForest().updateSize(-1);
         user.deleteForest();
         return "success";
     }
