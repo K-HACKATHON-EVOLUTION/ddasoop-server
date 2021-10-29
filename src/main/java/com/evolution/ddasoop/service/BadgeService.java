@@ -41,7 +41,14 @@ public class BadgeService {
                     .stream()
                     .filter(b -> b.getBadgeImgIdx().equals(badge.getBadgeImgIdx()))
                     .findAny();
-            findBadge.ifPresent(theBadge -> findBadge.get().updateCount());
+            findBadge.ifPresent(theBadge -> findBadge.get().setCount(findBadge.get().getCount()+1));
+        }
+
+        for(BadgeImageListResponseDto badge : allBadges){
+            if(badge.getCount()>0){
+                //뱃지가 한 개 이상이면 colored 된 filepath로 업데이트
+                badge.setFilePath(badgeImageRepository.findBadgeImageByBadgeImgIdx(badge.getBadgeImgIdx()).getFilePath());
+            }
         }
         return allBadges;
     }

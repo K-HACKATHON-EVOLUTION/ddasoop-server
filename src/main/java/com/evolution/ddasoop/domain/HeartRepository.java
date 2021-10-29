@@ -10,4 +10,5 @@ public interface HeartRepository extends JpaRepository<Heart, Long> {
     Heart findHeartByCourseCourseIdxAndUserUserIdxAndDeleteFlagFalse(Long courseIdx, String userIdx);
     Integer countHeartByCourseAndDeleteFlagFalse(Course course);
     List<Heart> findAllByUserUserIdxAndDeleteFlagFalse(String userIdx);
+    Heart findHeartByCourseCourseIdxAndUserUserIdx(Long courseIdx, String userIdx);
 }

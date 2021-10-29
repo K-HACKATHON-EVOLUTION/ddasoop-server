@@ -12,20 +12,10 @@ import org.springframework.web.bind.annotation.*;
 public class HeartApiController {
     public final HeartService heartService;
 
-    @PostMapping("")
-    public ResponseEntity<String> saveHeart(@PathVariable Long courseIdx, @PathVariable String userIdx){
+    @PatchMapping("")
+    public ResponseEntity<Object> changeHeart(@PathVariable Long courseIdx, @PathVariable String userIdx){
         try{
-            return ResponseEntity.ok(heartService.saveHeart(courseIdx, userIdx));
-        }catch(Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail");
-        }
-    }
-
-    @DeleteMapping("")
-    public ResponseEntity<String> deleteHeart(@PathVariable Long courseIdx, @PathVariable String userIdx){
-        try{
-            return ResponseEntity.ok(heartService.deleteHeart(courseIdx, userIdx));
+            return ResponseEntity.ok(heartService.changeHeart(courseIdx, userIdx));
         }catch(Exception e){
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail");
