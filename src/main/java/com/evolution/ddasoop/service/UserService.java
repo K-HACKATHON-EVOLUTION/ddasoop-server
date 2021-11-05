@@ -26,7 +26,7 @@ public class UserService {
     private final BadgeRepository badgeRepository;
 
     @Transactional
-    public Long saveUser(UserSaveRequestDto requestDto) throws IllegalArgumentException{
+    public String saveUser(UserSaveRequestDto requestDto) throws IllegalArgumentException{
         User user = userRepository.findByUserIdxAndDeleteFlagFalse(requestDto.getUserIdx());
         if(user != null){
             throw new IllegalArgumentException();
@@ -58,7 +58,7 @@ public class UserService {
                 .treeImg(imageRepository.findImagesByImageIdx(Long.valueOf(1)))
                 .build());
 
-        return badge.getBadgeIdx();
+        return badge.getBadgeImg().getFilePath();
     }
 
     @Transactional(readOnly = true)
