@@ -7,13 +7,11 @@ import lombok.Getter;
 public class BadgeResponseDto {
     private Long badgeIdx;
     private String userIdx;
-    private String treeImg;
+    private String badgeImg;
 
     public BadgeResponseDto(Badge entity){
         this.badgeIdx = entity.getBadgeIdx();
         this.userIdx = entity.getUser().getUserIdx();
-
-        if(entity.getTree() != null)
-           this.treeImg = entity.getTree().getTreeImg().getFilePath();
+        this.badgeImg = entity.getBadgeImg().getFilePath();
     }
 }
